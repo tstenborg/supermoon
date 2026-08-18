@@ -177,9 +177,9 @@ g_lunar_mean_anomaly <- 1 / mpfr("69699", 128L)
 g_lunar_mean_elongation <- 1 / mpfr("545868", 128L)
 #
 g_phase_uncertainty_full_moon <- mpfr("17.4", 128L) / 86400
-g_phase_uncertainty_last_quarter <- g_13_mpfr / 86400
+g_phase_uncertainty_last_qrt <- g_13_mpfr / 86400
 g_phase_uncertainty_new_moon <- mpfr("16.4", 128L) / 86400
-g_phase_uncertainty_first_quarter <- mpfr("15.3", 128L) / 86400
+g_phase_uncertainty_first_qrt <- mpfr("15.3", 128L) / 86400
 #
 g_threshold_get_del_t <- g_0_mpfr +
   decimal_date(
@@ -702,7 +702,7 @@ calculate_with_uncertainty <- function(function_name, value, uncertainty,
     result_low <- function_name(value - uncertainty)
     result_mid <- function_name(value)
     result_high <- function_name(value + uncertainty)
-    
+
     if (receive_uncertainty) {
       result_range <- range(
         result_low$value - result_low$uncertainty,
@@ -719,7 +719,7 @@ calculate_with_uncertainty <- function(function_name, value, uncertainty,
 
   # result_range is a 2-element vector holding the min and max of input args.
   # result_range[1] = min value.
-  # result_range[2] = max value. 
+  # result_range[2] = max value.
   list(
     "value" = mean(result_range),
     "uncertainty" = (result_range[2] - result_range[1]) * 0.5
@@ -823,8 +823,8 @@ get_del_t <- function(date_target) {
     t <- date_target - g_2000_mpfr
     del_t <- get_del_t_pre_2025(t)
 
-  # After 2050...
-  } else {
+  } else { # After 2050...
+    #
     # We have, del t = -20.0 - 0.5628 * (2150.0 - target date) +
     #                  32.0 * (((target date - 1820.0) * 0.01) ^ 2)
     # Or more simply...
@@ -1037,7 +1037,8 @@ get_lunar_apsis_jde <- function(date_target) {
       f_mul_2 - m_mul_2,     d_mul_2_pls_m_mul_2 - f_mul_2,
       #
       g_24_mpfr * d,         d_mul_4 - f_mul_4,
-      d_mul_2_pls_m_mul_2,   d - m)
+      d_mul_2_pls_m_mul_2,   d - m
+    )
 
     corrections_periodic <- sum(
       (g_vec_perigee_coeff + g_vec_perigee_subtrahend * t) *
@@ -1296,7 +1297,7 @@ get_lunar_phase_jde <- function(date_target) {
 
   } else if (g_lunar_phase == "last quarter") {
     k <- sign(k) * g_0_75_mpfr + floor(g_0_5_mpfr - sign(k) * g_0_75_mpfr + k)
-    phase_uncertainty <- g_phase_uncertainty_last_quarter
+    phase_uncertainty <- g_phase_uncertainty_last_qrt
 
   } else if (g_lunar_phase == "new moon") {
     k <- floor(g_0_5_mpfr + k)
@@ -1304,7 +1305,7 @@ get_lunar_phase_jde <- function(date_target) {
 
   } else if (g_lunar_phase == "first quarter") {
     k <- sign(k) * g_0_25_mpfr + floor(g_0_5_mpfr - sign(k) * g_0_25_mpfr + k)
-    phase_uncertainty <- g_phase_uncertainty_first_quarter
+    phase_uncertainty <- g_phase_uncertainty_first_qrt
 
   } else {
     cat("\nError in function get_lunar_phase_jde...")
@@ -1665,15 +1666,14 @@ make_get_utc <- function() {
         x + scaling * get_del_t_pre_2025(t) - dt_decimal
       }
 
-    # After 2050...
-    } else {
+    } else { # After 2050...
       f1 <- function(x) {
         x + scaling * (
           x * (g_0_0032_mpfr * x - g_11_0852_mpfr) + g_9369_66_mpfr
         ) - dt_decimal
       }
     }
-    # CONSOLIDATE THE FUNCTIONS ABOVE WITH VERSIONS IN OTHER FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!
+    # CONSOLIDATE THE FUNCTIONS ABOVE WITH VERSIONS IN OTHER FUNCTIONS!!!!!!!!!
 
     # Return the UTC value as a date-time.
     #   N.B. By default unirootR warns if the root finding calculation fails to
@@ -1776,7 +1776,7 @@ make_is_utc_leap_year <- function() {
 }
 
 
-make_time_dynamical_to_jde <- function() {
+make_time_dynam_to_jde <- function() {
 
   # Assumed global constants.
   #   g_0_25_mpfr, g_1_mpfr, g_2_mpfr, g_3_mpfr, g_30_6001_mpfr, g_365_25_mpfr,
@@ -1830,7 +1830,7 @@ make_time_dynamical_to_jde <- function() {
 }
 
 
-make_time_dynamical_to_universal <- function() {
+make_time_dynam_to_universal <- function() {
 
   # Assumed global constants.
   #   g_zero_seconds,
@@ -2124,7 +2124,7 @@ make_time_dynamical_to_universal <- function() {
 }
 
 
-make_time_jde_to_dynamical <- function() {
+make_time_jde_to_dynam <- function() {
 
   # Assumed global constants.
   #   g_0_mpfr, g_0_25_mpfr, g_0_5_mpfr, g_1_mpfr, g_2_mpfr, g_13_mpfr,
@@ -2215,7 +2215,7 @@ make_time_jde_to_dynamical <- function() {
 }
 
 
-make_time_universal_to_dynamical <- function() {
+make_time_universal_to_dynam <- function() {
 
   # Assumed global constants.
   #   g_900_milliseconds, g_zero_seconds,
@@ -2321,18 +2321,18 @@ make_time_universal_to_dynamical <- function() {
     # Convert Coordinated Universal Time to Dynamical Time.
     #   N.B. It's assumed a 21st century date will be processed.
     #        I.e. 01-Jan-2001 to 31-Dec-2100.
-    #        Limited support for other dates, for testing purposes, was provided.
+    #        Limited support for other dates was provided for testing purposes.
     #
     # Input:
     #   utc    Target date, in Coordinated Universal Time.
     #
     # N.B. The output value is stored as a UTC date-time format.
-    #      If the time zone label is neglected however, the date and time are the
-    #      correct Dynamical Time.
+    #      If the time zone label is neglected however, the date and time are
+    #      the correct Dynamical Time.
     #
     #      DT = UTC + 42.18 s + # leap seconds
     #
-    # Ref: Polynomial approximations to Delta T, 1620-2000 AD (Meeus and Simons).
+    # Ref: Polynomial approximations to Delta T, 1620-2000 AD (Meeus & Simons).
     #
     # N.B. Dynamical time can be determined exactly for dates from 1972 to the
     #      present, estimated after.
@@ -2473,10 +2473,10 @@ get_del_t_pre_2025 <- make_get_del_t_pre_2025()
 #
 get_utc <- make_get_utc()
 is_utc_leap_year <- make_is_utc_leap_year()
-time_dynamical_to_jde <- make_time_dynamical_to_jde()
-time_dynamical_to_universal <- make_time_dynamical_to_universal()
-time_jde_to_dynamical <- make_time_jde_to_dynamical()
-time_universal_to_dynamical <- make_time_universal_to_dynamical()
+time_dynamical_to_jde <- make_time_dynam_to_jde()
+time_dynamical_to_universal <- make_time_dynam_to_universal()
+time_jde_to_dynamical <- make_time_jde_to_dynam()
+time_universal_to_dynamical <- make_time_universal_to_dynam()
 ```
 
 ```{r testing_precision}
