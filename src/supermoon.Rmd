@@ -1255,7 +1255,7 @@ get_lunar_distance <- function(jde_mpfr) {
       sqrt(
         result[1] * result[1] +
           result[2] * result[2] +
-            result[3] * result[3]
+          result[3] * result[3]
       ) - distance_value
     )
   )
@@ -1640,14 +1640,6 @@ make_get_utc <- function() {
       stopifnot(FALSE)
     }
 
-    # Determine how many seconds were in the UTC year, get a inverse scaling
-    # factor. N.B. Remember, del T is a function of the UTC year (not DT year).
-    if (is_utc_leap_year(date_target)) {
-      scaling <- c_366_day_scaling
-    } else {
-      scaling <- c_365_day_scaling
-    }
-
     # Estimate value.
     # Remember,
     #   0 = UTC (decimal year) +
@@ -1656,6 +1648,14 @@ make_get_utc <- function() {
     #
     dt_decimal <- mpfr(decimal_date(date_target), 128L)
     small_diff <- mpfr(decimal_date(date_target - c_5_minutes), 128L)
+
+    # Determine how many seconds were in the UTC year, get a inverse scaling
+    # factor. N.B. Remember, del T is a function of the UTC year (not DT year).
+    if (is_utc_leap_year(date_target, dt_decimal)) {
+      scaling <- c_366_day_scaling
+    } else {
+      scaling <- c_365_day_scaling
+    }
 
 ################################################################################
     # Before 2050...
@@ -1730,19 +1730,24 @@ make_is_utc_leap_year <- function() {
   c_seq_leap_year_check <- seq(2025, 2097, by = 4)
 
   # Body of: is_utc_leap_year.
-  function(date_target) {
+  function(date_target, date_target_decimal_mpfr) {
 
-    # Test if a Dynamical Time is equivalent to a UTC leap year.
+    # Test if a Dynamical Time falls in a UTC leap year.
     # This information is used to convert DT to UTC date-times > 31-Dec-2020
     # 23:59:59.999 (UTC).
     #
     # Input:
-    #   date_target    Date should be a UTC time.
+    #   date_target  Date should be a UTC time.
     #
     #     N.B. An input date equivalent to a 21st century UTC date is assumed.
     #     N.B. date_target should be >= 01-Jan-2021 UTC.
     #          I.e. >= 01-Jan-2021 00:01:12.150 Dynamical Time.
     #          I.e. >= 2021.000002287871666339920000000000000000 DT.
+    #
+    #   date_target_decimal  Decimal equivalent of date_target, as a mprf value.
+    #
+    # Output:
+    #   A Boolean indicating if the Dynamical Time falls in a UTC leap year.
 
     # Get the year of the input Dynamical Time.
     year_target <- year(date_target)
@@ -1763,9 +1768,6 @@ make_is_utc_leap_year <- function() {
     # it's there. N.B. R indices start from 1, not 0.
     x <- match(year_target, c_seq_leap_year_check, nomatch = 0)
     if (x > 0) {
-      # Convert input date to decimal format.
-      date_target_decimal_mpfr <- mpfr(decimal_date(date_target), 128L)
-
       if (date_target_decimal_mpfr < c_vec_leap_year_transition[x]) {
         year_target <- year_target - 1
       }
