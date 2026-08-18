@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+title: "21st Century Supermoon Estimation in R"
+message: "If you use this repository, please cite it using these metadata."
+type: software
+authors:
+  - given-names: Travis
+    family-names: Stenborg
+    orcid: "https://orcid.org/0000-0002-2693-9628"
+url: "https://github.com/tstenborg/supermoon"
+abstract: >-
+  "This repository holds digital assets associated with the article '21st \
+  Century Supermoon Estimation in R'. That article presents a supermoon \
+  estimator, software that predicts the timing and distance of a perigee full \
+  or new moon for 2001 to 2100. Estimates include formal uncertainties."
+keywords:
+  - astronomy
+  - moon
+  - r
+preferred-citation:
+  authors:
+    - given-names: "Travis N."
+      family-names: Stenborg
+  collection-title: "Astronomical Data Analysis Software and Systems XXX"
+  conference:
+    # "conference, name" appears in BibTeX format only, as "series".
+    name: "Astronomical Society of the Pacific Conference Series, volume 532"
+  editors:
+    # "editors" appear in BibTeX format only, as "editor".
+    - given-names: "Jose Enrique"
+      family-names: Ruiz
+    - given-names: Francesco
+      family-names: Pierfedereci
+    - given-names: Peter
+      family-names: Teuben
+  end: 250  # Last page number.
+  # "notes" values should be formatted as single lines.
+  notes: "Proceedings of Astronomical Data Analysis Software and Systems (ADASS) XXX, an online conference from 08 to 12 Nov, 2020."
+  publisher:
+    # "publisher, name" appears in BibTeX format only, as "publisher".
+    name: "Astronomical Society of the Pacific"
+  start: 247  # First page number.
+  title: "21st Century Supermoon Estimation in R"
+  type: conference-paper
+  volume: 532  # Appears in APA format only.
+  year: 2022
