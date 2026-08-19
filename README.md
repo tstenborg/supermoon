@@ -154,9 +154,10 @@ object on Unix/Linux (`elp82b_2.so`), or DLL on Windows (`elp82b_2.dll`).
 - The compiled program, data files `ELP1` to `ELP36` and R Markdown script
   must be located in the same directory.
 
-Example command line compilation syntax for GNU Fortran on Windows:
+Example command line compilation syntax for GNU Fortran on Windows, via the
+MSYS2 UCRT64 shell:
 
-    gfortran src\elp82b_2.f -o src\elp82b_2.dll -ffixed-form -fimplicit-none -fno-automatic -shared
+    gfortran src/elp82b_2.f -o src/elp82b_2.dll -ffixed-form -fimplicit-none -fno-automatic -shared
 
 #### GFortran Compiler Flags
 

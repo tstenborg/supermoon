@@ -3,9 +3,9 @@ title: "21st Century Supermoon Estimation in R"
 output: github_document
 ---
 
-```{r main_definitions}
-
-knitr::opts_chunk$set(cache = TRUE, results = "hold") # Group output by chunk.
+```{r, "main-definitions"}
+#knitr::opts_chunk$set(cache = TRUE, results = "hold") # Group output by chunk.
+knitr::opts_chunk$set(cache = FALSE, results = "hold") # Group output by chunk.
 
 # Date-time manipulation utilities.
 suppressMessages(library(lubridate))
@@ -48,92 +48,27 @@ g_library_path <- file.path(paste0("elp82b_2", .Platform$dynlib.ext))
 g_max_indent <- 27
 g_pi_on_180_mpfr <- Const("pi", prec = 128L) / mpfr("180", 128L)
 
-g_neg_0_0006691_mpfr <- mpfr("-0.0006691", 128L)
 g_0_mpfr <- mpfr("0", 128L)
-g_0_00000000073_mpfr <- mpfr("0.00000000073", 128L)
-g_0_0000000052_mpfr <- mpfr("0.0000000052", 128L)
-g_0_000000055_mpfr <- mpfr("0.000000055", 128L)
-g_0_0000010_mpfr <- mpfr("0.0000010", 128L)
-g_0_000001098_mpfr <- mpfr("0.000001098", 128L)
-g_0_0000074_mpfr <- mpfr("0.0000074", 128L)
-g_0_00001156_mpfr <- mpfr("0.00001156", 128L)
-g_0_0000148_mpfr <- mpfr("0.0000148", 128L)
-g_0_0001536_mpfr <- mpfr("0.0001536", 128L)
-g_0_00015437 <- mpfr("0.00015437", 128L)
 g_0_0004_mpfr <- mpfr("0.0004", 128L)
-g_0_0008130_mpfr <- mpfr("0.0008130", 128L)
-g_0_001_mpfr <- mpfr("0.001", 128L)
-g_0_0018819_mpfr <- mpfr("0.0018819", 128L)
-g_0_002516_mpfr <- mpfr("0.002516", 128L)
-g_0_00306_mpfr <- mpfr("0.00306", 128L)
 g_0_0032_mpfr <- mpfr("0.0032", 128L)
-g_0_0036539_mpfr <- mpfr("0.0036539", 128L)
-g_0_0087414_mpfr <- mpfr("0.0087414", 128L)
-g_0_0100383_mpfr <- mpfr("0.0100383", 128L)
-g_0_0125053_mpfr <- mpfr("0.0125053", 128L)
 g_0_25_mpfr <- mpfr("0.25", 128L)
-g_0_36525_mpfr <- mpfr("0.36525", 128L)
 g_0_5_mpfr <- mpfr("0.5", 128L)
-g_0_75_mpfr <- mpfr("0.75", 128L)
 g_1_mpfr <- mpfr("1", 128L)
-g_1_56375588_mpfr <- mpfr("1.56375588", 128L)
 g_2_mpfr <- mpfr("2", 128L)
 g_3_mpfr <- mpfr("3", 128L)
 g_4_mpfr <- mpfr("4", 128L)
-g_5_mpfr <- mpfr("5", 128L)
-g_6_mpfr <- mpfr("6", 128L)
 g_7_mpfr <- mpfr("7", 128L)
-g_8_mpfr <- mpfr("8", 128L)
 g_9_mpfr <- mpfr("9", 128L)
-g_10_mpfr <- mpfr("10", 128L)
 g_11_mpfr <- mpfr("11", 128L)
-g_11_0852_mpfr <- mpfr("11.0852", 128L)
 g_12_mpfr <- mpfr("12", 128L)
-g_12_3685_mpfr <- mpfr("12.3685", 128L)
 g_13_mpfr <- mpfr("13", 128L)
-g_13_2555_mpfr <- mpfr("13.2555", 128L)
 g_14_mpfr <- mpfr("14", 128L)
-g_16_mpfr <- mpfr("16", 128L)
-g_18_mpfr <- mpfr("18", 128L)
-g_20_mpfr <- mpfr("20", 128L)
-g_22_mpfr <- mpfr("22", 128L)
 g_24_mpfr <- mpfr("24", 128L)
-g_27_1577721_mpfr <- mpfr("27.1577721", 128L)
-g_27_55454989_mpfr <- mpfr("27.55454989", 128L)
 g_30_6001_mpfr <- mpfr("30.6001", 128L)
-g_93_272095_mpfr <- mpfr("93.272095", 128L)
-g_124_7746_mpfr <- mpfr("124.7746", 128L)
-g_134_9633964_mpfr <- mpfr("134.9633964", 128L)
-g_171_9179_mpfr <- mpfr("171.9179", 128L)
-g_297_8501921_mpfr <- mpfr("297.8501921", 128L)
-g_316_6109_mpfr <- mpfr("316.6109", 128L)
-g_335_9106046_mpfr <- mpfr("335.9106046", 128L)
-g_347_3477_mpfr <- mpfr("347.3477", 128L)
-g_357_5291092_mpfr <- mpfr("357.5291092", 128L)
 g_360_mpfr <- mpfr("360", 128L)
-g_364_5287911_mpfr <- mpfr("364.5287911", 128L)
 g_365_25_mpfr <- mpfr("365.25", 128L)
-g_1000_mpfr <- mpfr("1000", 128L)
-g_1236_85_mpfr <- mpfr("1236.85", 128L)
-g_1325_55_mpfr <- mpfr("1325.55", 128L)
-g_1999_97_mpfr <- mpfr("1999.97", 128L)
 g_2000_mpfr <- mpfr("2000", 128L)
-g_2005_mpfr <- mpfr("2005", 128L)
-g_2050_mpfr <- mpfr("2050", 128L)
 g_4716_mpfr <- mpfr("4716", 128L)
-g_9369_66_mpfr <- mpfr("9369.66", 128L)
-g_35999_0502909_mpfr <- mpfr("35999.0502909", 128L)
-g_36525_mpfr <- mpfr("36525", 128L)
-g_385000_56_mpfr <- mpfr("385000.56", 128L)
-g_445267_1114034_mpfr <- mpfr("445267.1114034", 128L)
-g_477198_8675055_mpfr <- mpfr("477198.8675055", 128L)
-g_483202_0175233_mpfr <- mpfr("483202.0175233", 128L)
-g_2451534_6698_mpfr <- mpfr("2451534.6698", 128L)
-g_2451545_mpfr <- mpfr("2451545", 128L)
-g_24490000_mpfr <- mpfr("24490000", 128L)
-g_14712000_mpfr <- mpfr("14712000", 128L)
-g_113065000_mpfr <- mpfr("113065000", 128L)
-g_863310000_mpfr <- mpfr("863310000", 128L)
 
 # Set durations.
 g_zero_seconds <- dseconds(g_0_mpfr)
@@ -167,463 +102,6 @@ g_67_18_seconds <- dseconds(mpfr("67.18", 128L))
 g_68_18_seconds <- dseconds(mpfr("68.18", 128L))
 g_69_18_seconds <- dseconds(mpfr("69.18", 128L))
 
-# Set thresholds and miscellaneous constants.
-#
-g_apsis_uncertainty_apogee <- 3 / mpfr("1440", 128L)
-g_apsis_uncertainty_perigee <- 31 / mpfr("1440", 128L)
-#
-g_lunar_argument_latitude <- 1 / mpfr("3526000", 128L)
-g_lunar_mean_anomaly <- 1 / mpfr("69699", 128L)
-g_lunar_mean_elongation <- 1 / mpfr("545868", 128L)
-#
-g_phase_uncertainty_full_moon <- mpfr("17.4", 128L) / 86400
-g_phase_uncertainty_last_qrt <- g_13_mpfr / 86400
-g_phase_uncertainty_new_moon <- mpfr("16.4", 128L) / 86400
-g_phase_uncertainty_first_qrt <- mpfr("15.3", 128L) / 86400
-#
-g_threshold_get_del_t <- g_0_mpfr +
-  decimal_date(
-    as.POSIXct(
-      "01-01-2021 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-    ) - g_900_milliseconds
-  )
-g_uncertainty_get_del_t <- mpfr("0.058", 128L) / 3
-
-
-# Lunar apogee calculation coefficients.
-g_vec_apogee_coeff <- c(mpfr("0.4392", 128L),
-                        mpfr("0.0684", 128L),
-                        mpfr("0.0456", 128L),
-                        mpfr("0.0426", 128L),
-                        mpfr("0.0212", 128L),
-                        mpfr("-0.0189", 128L),
-                        mpfr("0.0144", 128L),
-                        mpfr("0.0113", 128L),
-                        mpfr("0.0047", 128L),
-                        mpfr("0.0036", 128L),
-                        mpfr("0.0035", 128L),
-                        mpfr("0.0034", 128L),
-                        mpfr("-0.0034", 128L),
-                        mpfr("0.0022", 128L),
-                        mpfr("-0.0017", 128L),
-                        mpfr("0.0013", 128L),
-                        mpfr("0.0011", 128L),
-                        mpfr("0.0010", 128L),
-                        mpfr("0.0009", 128L),
-                        mpfr("0.0007", 128L),
-                        mpfr("0.0006", 128L),
-                        rep(mpfr("0.0005", 128L), 2),
-                        rep(g_0_0004_mpfr, 3),
-                        rep(mpfr("-0.0004", 128L), 2),
-                        rep(mpfr("0.0003", 128L), 3),
-                        mpfr("-0.0003", 128L))
-#
-g_vec_apogee_subtrahend <- c(rep(g_0_mpfr, 2),
-                             rep(mpfr("-0.00011", 128L), 2),
-                             rep(g_0_mpfr, 28))
-#
-# Lunar perigee calculation coefficients.
-g_vec_perigee_coeff <- c(mpfr("-1.6769", 128L),
-                         mpfr("0.4589", 128L),
-                         mpfr("-0.1856", 128L),
-                         mpfr("0.0883", 128L),
-                         mpfr("-0.0773", 128L),
-                         mpfr("0.0502", 128L),
-                         mpfr("-0.0460", 128L),
-                         mpfr("0.0422", 128L),
-                         mpfr("-0.0256", 128L),
-                         mpfr("0.0253", 128L),
-                         mpfr("0.0237", 128L),
-                         mpfr("0.0162", 128L),
-                         mpfr("-0.0145", 128L),
-                         mpfr("0.0129", 128L),
-                         mpfr("-0.0112", 128L),
-                         mpfr("-0.0104", 128L),
-                         mpfr("0.0086", 128L),
-                         mpfr("0.0069", 128L),
-                         mpfr("0.0066", 128L),
-                         mpfr("-0.0053", 128L),
-                         mpfr("-0.0052", 128L),
-                         mpfr("-0.0046", 128L),
-                         mpfr("-0.0041", 128L),
-                         mpfr("0.0040", 128L),
-                         g_0_0032_mpfr,
-                         mpfr("-0.0032", 128L),
-                         mpfr("0.0031", 128L),
-                         mpfr("-0.0029", 128L),
-                         rep(mpfr("0.0027", 128L), 2),
-                         mpfr("-0.0027", 128L),
-                         mpfr("0.0024", 128L),
-                         rep(mpfr("-0.0021", 128L), 3),
-                         mpfr("0.0019", 128L),
-                         mpfr("-0.0018", 128L),
-                         rep(mpfr("-0.0014", 128L), 3),
-                         mpfr("0.0014", 128L),
-                         mpfr("-0.0014", 128L),
-                         rep(mpfr("0.0013", 128L), 2),
-                         mpfr("0.0011", 128L),
-                         mpfr("-0.0011", 128L),
-                         mpfr("-0.0010", 128L),
-                         mpfr("-0.0009", 128L),
-                         mpfr("-0.0008", 128L),
-                         rep(mpfr("0.0008", 128L), 2),
-                         rep(mpfr("0.0007", 128L), 3),
-                         rep(mpfr("-0.0006", 128L), 2),
-                         mpfr("0.0006", 128L),
-                         rep(mpfr("0.0005", 128L), 2),
-                         mpfr("-0.0004", 128L))
-#
-g_vec_perigee_subtrahend <- c(rep(g_0_mpfr, 4),
-                              mpfr("0.00019", 128L),
-                              mpfr("-0.00013", 128L),
-                              g_0_mpfr,
-                              mpfr("-0.00011", 128L),
-                              rep(g_0_mpfr, 52))
-
-# Lunar distance periodic calculation coefficients.
-g_vec_ld_coeff <- c(
-  -20905355, -3699111, -2955968, -569925,
-  48888, -3149, 246158, -152138,
-  -170733, -204586, -129620, 108743,
-  104755, 10321, 79661, -34782,
-  -23210, -21636, 24208, 30824,
-  -8379, -16675, -12831, -10445,
-  -11650, 14403, -7003, 10056,
-  6322, -9884, 5751, -4950,
-  4130, -3958, 3258, 2616,
-  -1897, -2117, 2354, -1423,
-  -1117, -1571, -1739, -4421,
-  1165, 8752
-)
-
-# Lunar distance masks for vectorised operations.
-g_mask_distance_d <- c(0,
-                       2,
-                       2,
-                       0,
-                       0,
-                       0,
-                       2,
-                       2,
-                       2,
-                       2,
-                       0,
-                       1,
-                       0,
-                       2,
-                       0,
-                       4,
-                       0,
-                       4,
-                       2,
-                       2,
-                       1,
-                       1,
-                       2,
-                       2,
-                       4,
-                       2,
-                       0,
-                       2,
-                       1,
-                       2,
-                       0,
-                       2,
-                       2,
-                       4,
-                       3,
-                       2,
-                       4,
-                       0,
-                       2,
-                       4,
-                       0,
-                       4,
-                       1,
-                       0,
-                       0,
-                       2)
-#
-g_mask_distance_f_mul_2 <- c(0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             1,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             -1,
-                             -1,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             -1,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             0,
-                             -1,
-                             0,
-                             -1)
-#
-g_mask_distance_m <- c(0,
-                       0,
-                       0,
-                       0,
-                       1,
-                       0,
-                       0,
-                       -1,
-                       0,
-                       -1,
-                       1,
-                       0,
-                       1,
-                       0,
-                       0,
-                       0,
-                       0,
-                       0,
-                       1,
-                       1,
-                       0,
-                       1,
-                       -1,
-                       0,
-                       0,
-                       0,
-                       1,
-                       -1,
-                       0,
-                       -2,
-                       1,
-                       -2,
-                       0,
-                       -1,
-                       0,
-                       1,
-                       -1,
-                       2,
-                       2,
-                       0,
-                       0,
-                       -1,
-                       0,
-                       0,
-                       2,
-                       0)
-#
-g_mask_distance_m_prime <- c(1,
-                             -1,
-                             0,
-                             2,
-                             0,
-                             0,
-                             -2,
-                             -1,
-                             1,
-                             0,
-                             -1,
-                             0,
-                             1,
-                             0,
-                             1,
-                             -1,
-                             3,
-                             -2,
-                             -1,
-                             0,
-                             -1,
-                             0,
-                             1,
-                             2,
-                             0,
-                             -3,
-                             -2,
-                             -2,
-                             1,
-                             0,
-                             2,
-                             -1,
-                             1,
-                             -1,
-                             -1,
-                             1,
-                             -2,
-                             -1,
-                             -1,
-                             1,
-                             4,
-                             0,
-                             -2,
-                             2,
-                             1,
-                             -1)
-
-# Lunar phase (full moon) calculation coefficients.
-g_vec_ph_full_coeff <- c(mpfr("-0.40614", 128L),
-                         mpfr("0.17302", 128L),
-                         mpfr("0.01614", 128L),
-                         mpfr("0.01043", 128L),
-                         mpfr("0.00734", 128L),
-                         mpfr("-0.00515", 128L),
-                         mpfr("0.00209", 128L),
-                         mpfr("-0.00111", 128L),
-                         mpfr("-0.00057", 128L),
-                         mpfr("0.00056", 128L),
-                         mpfr("-0.00042", 128L),
-                         mpfr("0.00042", 128L),
-                         mpfr("0.00038", 128L),
-                         mpfr("-0.00024", 128L),
-                         mpfr("-0.00017", 128L),
-                         mpfr("-0.00007", 128L),
-                         rep(mpfr("0.00004", 128L), 2),
-                         rep(mpfr("0.00003", 128L), 2),
-                         mpfr("-0.00003", 128L),
-                         mpfr("0.00003", 128L),
-                         rep(mpfr("-0.00002", 128L), 2),
-                         mpfr("0.00002", 128L))
-
-# Lunar phase (new moon) calculation coefficients.
-g_vec_ph_new_coeff <- c(mpfr("-0.40720", 128L),
-                        mpfr("0.17241", 128L),
-                        mpfr("0.01608", 128L),
-                        mpfr("0.01039", 128L),
-                        mpfr("0.00739", 128L),
-                        mpfr("-0.00514", 128L),
-                        mpfr("0.00208", 128L),
-                        mpfr("-0.00111", 128L),
-                        mpfr("-0.00057", 128L),
-                        mpfr("0.00056", 128L),
-                        mpfr("-0.00042", 128L),
-                        mpfr("0.00042", 128L),
-                        mpfr("0.00038", 128L),
-                        mpfr("-0.00024", 128L),
-                        mpfr("-0.00017", 128L),
-                        mpfr("-0.00007", 128L),
-                        rep(mpfr("0.00004", 128L), 2),
-                        rep(mpfr("0.00003", 128L), 2),
-                        mpfr("-0.00003", 128L),
-                        mpfr("0.00003", 128L),
-                        rep(mpfr("-0.00002", 128L), 2),
-                        mpfr("0.00002", 128L))
-
-# Lunar phase (quarter phase) calculation coefficients.
-g_vec_ph_qrt_coeff <- c(mpfr("-0.62801", 128L),
-                        mpfr("0.17172", 128L),
-                        mpfr("-0.01183", 128L),
-                        mpfr("0.00862", 128L),
-                        mpfr("0.00804", 128L),
-                        mpfr("0.00454", 128L),
-                        mpfr("0.00204", 128L),
-                        mpfr("-0.00180", 128L),
-                        mpfr("-0.00070", 128L),
-                        mpfr("-0.00040", 128L),
-                        mpfr("-0.00034", 128L),
-                        rep(mpfr("0.00032", 128L), 2),
-                        mpfr("-0.00028", 128L),
-                        mpfr("0.00027", 128L),
-                        mpfr("-0.00017", 128L),
-                        mpfr("-0.00005", 128L),
-                        mpfr("0.00004", 128L),
-                        mpfr("-0.00004", 128L),
-                        mpfr("0.00004", 128L),
-                        rep(mpfr("0.00003", 128L), 2),
-                        rep(mpfr("0.00002", 128L), 2),
-                        mpfr("-0.00002", 128L))
-
-# Lunar phase (quarter phase) supplemental corrections.
-g_vec_ph_sup_coeff <- c(mpfr("-0.00038", 128L),
-                        mpfr(" 0.00026", 128L),
-                        mpfr("-0.00002", 128L),
-                        rep(mpfr("0.00002", 128L), 2))
-
-# Lunar phase additional corrections coefficients.
-g_vec_ph_add_coeff_outer <- c(mpfr("0.000325", 128L),
-                              mpfr("0.000165", 128L),
-                              mpfr("0.000164", 128L),
-                              mpfr("0.000126", 128L),
-                              mpfr("0.000110", 128L),
-                              mpfr("0.000062", 128L),
-                              mpfr("0.000060", 128L),
-                              mpfr("0.000056", 128L),
-                              mpfr("0.000047", 128L),
-                              mpfr("0.000042", 128L),
-                              mpfr("0.000040", 128L),
-                              mpfr("0.000037", 128L),
-                              mpfr("0.000035", 128L),
-                              mpfr("0.000023", 128L))
-#
-g_vec_ph_add_addend      <- c(mpfr("299.77", 128L),
-                              mpfr("251.88", 128L),
-                              mpfr("251.83", 128L),
-                              mpfr("349.42", 128L),
-                              mpfr("84.66", 128L),
-                              mpfr("141.74", 128L),
-                              mpfr("207.14", 128L),
-                              mpfr("154.84", 128L),
-                              mpfr("34.52", 128L),
-                              mpfr("207.19", 128L),
-                              mpfr("291.34", 128L),
-                              mpfr("161.72", 128L),
-                              mpfr("239.56", 128L),
-                              mpfr("331.55", 128L))
-#
-g_vec_ph_add_coeff_inner <- c(mpfr("0.107408", 128L),
-                              mpfr("0.016321", 128L),
-                              mpfr("26.651886", 128L),
-                              mpfr("36.412478", 128L),
-                              mpfr("18.206239", 128L),
-                              mpfr("53.303771", 128L),
-                              mpfr("2.453732", 128L),
-                              mpfr("7.306860", 128L),
-                              mpfr("27.261239", 128L),
-                              mpfr("0.121824", 128L),
-                              mpfr("1.844379", 128L),
-                              mpfr("24.198154", 128L),
-                              mpfr("25.513099", 128L),
-                              mpfr("3.592518", 128L))
-#
-g_vec_ph_add_subtrahend  <- c(mpfr("0.009173", 128L),
-                              rep(g_0_mpfr, 13))
-
-
-# get_lunar_apsis_jde() support vectors.
-g_vec_sin_perigee <- rep(g_0_mpfr, 60)  # 60-element mpfr zero vector.
-g_vec_sin_apogee <- rep(g_0_mpfr, 32)  # 32-element mpfr zero vector.
-#
-# get_lunar_distance() support vectors and index masks.
-g_vec_e <- rep(g_1_mpfr, 46)  # 46-element mpfr vector, elements set to 1.0.
-g_vec_e_mask_e <- c(
-  5, 8, 10, 11, 13, 19, 20, 22, 23, 27, 28, 31, 34, 36, 37, 42
-)
-g_vec_e_mask_e_mul_e <- c(30, 32, 38, 39, 45)
-
 # End global variables. #######################################################
 
 
@@ -645,7 +123,6 @@ angle_degrees_to_radians <- function(angle_degrees) {
   angle_degrees * g_pi_on_180_mpfr
 }
 
-
 angle_radians_to_degrees <- function(angle_radians) {
 
   # Convert angles in radians to degrees.
@@ -665,7 +142,6 @@ angle_radians_to_degrees <- function(angle_radians) {
   angle_radians / Const("pi", prec = 128L) * 180
 }
 
-
 calculate_with_uncertainty <- function(function_name, value, uncertainty,
                                        receive_uncertainty) {
 
@@ -679,7 +155,7 @@ calculate_with_uncertainty <- function(function_name, value, uncertainty,
   #   function_name          The function to invoke.
   #   value                  The value to pass to the function.
   #   uncertainty            The value's uncertainty to pass to the function.
-  #   receive_uncertainty    A boolean indicating if the invoked function
+  #   receive_uncertainty    A Boolean indicating if the invoked function
   #                          itself returns a value with an uncertainty.
 
   # Allow for both zero and non-zero uncertainty.
@@ -725,7 +201,6 @@ calculate_with_uncertainty <- function(function_name, value, uncertainty,
     "uncertainty" = (result_range[2] - result_range[1]) * 0.5
   )
 }
-
 
 call_elp82b_2 <- function(tjj_val, prec_val = 0.0, nul_val = 10) {
 
@@ -781,78 +256,9 @@ call_elp82b_2 <- function(tjj_val, prec_val = 0.0, nul_val = 10) {
   # Call the elp82b2 Fortran function.
   # N.B. Using parameter names in ".Fortran" crashes the session.
   #      Potential name mangling issues.
-  .Fortran("elp82b2", tjj, prec, nul, r, ierr)
+  # The geocentric lunar position vector is returned in element four.
+  .Fortran("elp82b2", tjj, prec, nul, r, ierr)[[4]]
 }
-
-
-get_del_t <- function(date_target) {
-
-  # Calculate the difference, del T, in seconds, between dynamical time and
-  # universal time (UT1).
-  #   See Five Millennium Canon of Solar Eclipses: -1999 to +3000
-  #                                                (2000 BCE to 3000 CE).
-  #
-  # Input:
-  #   date_target    Date should be universal time (UT1).
-  #                  It's assumed the target date will be in the 21st century.
-  #
-  # N.B. An exact decimal year is used here. The reference material uses a less
-  #      accurate value rounded to the middle of months.
-  # N.B. Where relevant, a lunar secular acceleration of -26 arcsec/cy^2 is
-  #      assumed.
-
-  # Convert input date to decimal years. E.g. 1987.25 is the end of March 1987.
-  date_target <- mpfr(decimal_date(date_target), 128L)
-
-  # Before 2021...
-  if (date_target < g_threshold_get_del_t) {
-    # As known del T values exist until 31-Dec-2020 23:59:59, del T shouldn't
-    # be estimated on or prior to that.
-    # Allow a 900 millisecond buffer for processing the UT1-UTC uncertainty,
-    # which is always <= 0.9 s.
-    # So, g_threshold_get_del_t is (01-01-2021 00:00:00) - 0.9 s.
-
-    cat("\nError in function get_del_t...")
-    cat("\nInvalid date processing; date_target:\n")
-    print(date_target, digits = 20)
-    stopifnot(FALSE)
-  }
-
-  # Before 2050...
-  if (date_target < g_2050_mpfr) {
-    t <- date_target - g_2000_mpfr
-    del_t <- get_del_t_pre_2025(t)
-
-  } else { # After 2050...
-    #
-    # We have, del t = -20.0 - 0.5628 * (2150.0 - target date) +
-    #                  32.0 * (((target date - 1820.0) * 0.01) ^ 2)
-    # Or more simply...
-    del_t <- date_target * (g_0_0032_mpfr * date_target - g_11_0852_mpfr) +
-      g_9369_66_mpfr
-  }
-
-  # N.B. Here uncertainty is in seconds; algorithm's intrinsic uncertainty.
-  n <- date_target - g_2005_mpfr
-  list(
-    "value" = del_t,
-    "uncertainty" = g_0_36525_mpfr * n *
-      sqrt(n * g_uncertainty_get_del_t * (g_1_mpfr + n * g_0_0004_mpfr))
-  )
-}
-
-
-get_eccentric_anomaly <- function(time_target) {
-
-  # Get the eccentric anomaly, for a given time
-  # (in Julian centuries from Epoch J2000.0).
-  #
-  # Input:
-  #   time_target    Target time, in Julian centuries from Epoch J2000.0.
-
-  g_1_mpfr - time_target * (g_0_002516_mpfr + time_target * g_0_0000074_mpfr)
-}
-
 
 get_list_estimates <- function(function_name, date_start, date_end, interval) {
 
@@ -897,295 +303,570 @@ get_list_estimates <- function(function_name, date_start, date_end, interval) {
   list_estimates
 }
 
+is_valid_date <- function(date_target) {
 
-get_lunar_apsis_jde <- function(date_target) {
-
-  # Calculate lunar apsis dates.
-  #   See Astronomical Algorithms, Meeus, chapter 50.
+  # This program is designed to process 21st century dates.
+  #   I.e. 01-Jan-2001 to 31-Dec-2100.
   #
   # Input:
-  #   date_target    Date should be a Dynamical Time, as a date/time value.
-
-  # Determine new moon coefficient "k".
-  #   k = 0 corresponds to the perigee of 22nd Dec, 1999.
-  #   Negative values of k give lunar apsides before that perigee.
-  #   - For perigee, round to the nearest integer.
-  #   - For apogee, round to the nearest integer + 0.5.
-  #   Assumes target apsis is a global variable.
+  #   date_target    Date should be a UTC time.
   #
-  #   N.B. Ensure x.5 values are rounded towards zero if negative, but away
-  #        from zero if positive.
-  #   N.B. Round odd and even numbers consistently (R doesn't, by default).
-  #   N.B. Convert target dynamical time to decimal years before use.
-  #
+  # Output:
+  #   A Boolean indicating if the date is a 21st century date.
 
-  k <- (mpfr(decimal_date(date_target), 128L) - g_1999_97_mpfr) * g_13_2555_mpfr
-  if (g_lunar_apsis == "perigee") {
-    k <- floor(g_0_5_mpfr + k)
-
-  } else if (g_lunar_apsis == "apogee") {
-    k <- g_0_5_mpfr + floor(k)
-
-  } else {
-    cat("\nError in function get_lunar_apsis_jde...")
-    cat("\nInvalid lunar apsis; g_lunar_apsis:\n")
-    print(g_lunar_apsis)
-    stopifnot(FALSE)
-  }
-
-  # Determine the approximate time "t" in Julian centuries from epoch 2000.
-  t <- k / g_1325_55_mpfr
-  t_mul_t <- t * t
-
-  # Determine the mean perigee or apogee, in Julian Ephemeris Days "JDE".
-  # Specify the calculation using Horner's Method.
-  mean_apsis <- t_mul_t * (
-    g_neg_0_0006691_mpfr + t * (t * g_0_0000000052_mpfr - g_0_000001098_mpfr)
-  ) + g_27_55454989_mpfr * k + g_2451534_6698_mpfr
-
-  # Calculate the Moon's mean elongation, in radians.
-  d <- angle_degrees_to_radians(
-    t_mul_t * (
-      t * (t * g_0_000000055_mpfr - g_0_00001156_mpfr) - g_0_0100383_mpfr
-    ) + g_171_9179_mpfr + g_335_9106046_mpfr * k
-  )
-  d_mul_2 <- g_2_mpfr * d
-  d_mul_3 <- g_3_mpfr * d
-  d_mul_4 <- g_4_mpfr * d
-  d_mul_5 <- g_5_mpfr * d
-  d_mul_6 <- g_6_mpfr * d
-  d_mul_8 <- g_8_mpfr * d
-  d_mul_10 <- g_10_mpfr * d
-  d_mul_12 <- g_12_mpfr * d
-
-  # Calculate the Sun's mean anomaly, in radians.
-  m <- angle_degrees_to_radians(
-    t_mul_t * (-t * g_0_0000010_mpfr - g_0_0008130_mpfr) + g_347_3477_mpfr +
-      g_27_1577721_mpfr * k
-  )
-  m_mul_2 <- g_2_mpfr * m
-
-  # Calculate the Moon's argument of latitude, in radians.
-  f <- angle_degrees_to_radians(
-    t_mul_t * (-t * g_0_0000148_mpfr - g_0_0125053_mpfr) + g_316_6109_mpfr +
-      g_364_5287911_mpfr * k
-  )
-  f_mul_2 <- g_2_mpfr * f
-
-  # Calculate the first set of periodic corrections, in days.
-  if (g_lunar_apsis == "perigee") {
-    # Set apsis-specific uncertainty from Astronomical Algorithms, Meeus,
-    # chapter 50.
-    # N.B. The worst-case uncertainty, not mean uncertainty, is taken here.
-    # N.B. Values here are minutes converted into JDE days, using 1 day = 1440
-    #      minutes.
-    apsis_uncertainty <- g_apsis_uncertainty_perigee
-
-    # Calculate periodic corrections for perigee.
-    d_mul_14 <- g_14_mpfr * d
-    d_mul_16 <- g_16_mpfr * d
-    d_mul_18 <- g_18_mpfr * d
-    d_mul_20 <- g_20_mpfr * d
-    d_mul_22 <- g_22_mpfr * d
-    d_mul_2_pls_m_mul_2 <- d_mul_2 + m_mul_2
-    d_mul_4_pls_f_mul_2 <- d_mul_4 + f_mul_2
-    f_mul_4 <- g_4_mpfr * f
-
-    # Perigee timing periodic calculation coefficients. 60 elements.
-    # N.B. Update an existing global vector in-place.
-    g_vec_sin_perigee[] <- c(
-      d_mul_2,               d_mul_4,
-      d_mul_6,               d_mul_8,
-      #
-      d_mul_2 - m,           m,
-      d_mul_10,              d_mul_4 - m,
-      #
-      d_mul_6 - m,           d_mul_12,
-      d,                     d_mul_8 - m,
-      #
-      d_mul_14,              f_mul_2,
-      d_mul_3,               d_mul_10 - m,
-      #
-      d_mul_16,              d_mul_12 - m,
-      d_mul_5,               d_mul_2 + f_mul_2,
-      #
-      d_mul_18,              d_mul_14 - m,
-      g_7_mpfr * d,          d_mul_2 + m,
-      #
-      d_mul_20,              d + m,
-      d_mul_16 - m,          d_mul_4 + m,
-      #
-      g_9_mpfr * d,          d_mul_4_pls_f_mul_2,
-      d_mul_2 - m_mul_2,     d_mul_4 - m_mul_2,
-      #
-      d_mul_6 - m_mul_2,     d_mul_22,
-      d_mul_18 - m,          d_mul_6 + m,
-      #
-      g_11_mpfr * d,         d_mul_8 + m,
-      d_mul_4 - f_mul_2,     d_mul_6 + f_mul_2,
-      #
-      d_mul_3 + m,           d_mul_5 + m,
-      g_13_mpfr * d,         d_mul_20 - m,
-      #
-      d_mul_3 + m_mul_2,     d_mul_4_pls_f_mul_2 - m_mul_2,
-      d + m_mul_2,           d_mul_22 - m,
-      #
-      f_mul_4,               d_mul_6 - f_mul_2,
-      d_mul_2 - f_mul_2 + m, m_mul_2,
-      #
-      f_mul_2 - m,           d_mul_2 + f_mul_4,
-      f_mul_2 - m_mul_2,     d_mul_2_pls_m_mul_2 - f_mul_2,
-      #
-      g_24_mpfr * d,         d_mul_4 - f_mul_4,
-      d_mul_2_pls_m_mul_2,   d - m
-    )
-
-    corrections_periodic <- sum(
-      (g_vec_perigee_coeff + g_vec_perigee_subtrahend * t) *
-        sin(g_vec_sin_perigee)
-    )
-
-  } else {
-    # Set apsis-specific uncertainty.
-    # N.B. Values here are minutes converted into JDE days, using 1 day = 1440
-    #      minutes.
-    apsis_uncertainty <- g_apsis_uncertainty_apogee
-    cat("\nDEBUG A.\n")
-    # Calculate periodic corrections for apogee. 32 elements.
-    # N.B. Update an existing global vector in-place.
-    g_vec_sin_apogee[] <- c(
-      d_mul_2,               d_mul_4,
-      m,                     d_mul_2 - m,
-      #
-      f_mul_2,               d,
-      d_mul_6,               d_mul_4 - m,
-      #
-      d_mul_2 + f_mul_2,     d + m,
-      d_mul_8,               d_mul_6 - m,
-      #
-      d_mul_2 - f_mul_2,     d_mul_2 - m_mul_2,
-      d_mul_3,               d_mul_4 + f_mul_2,
-      #
-      d_mul_8 - m,           d_mul_4 - m_mul_2,
-      d_mul_10,              d_mul_3 + m,
-      #
-      m_mul_2,               d_mul_2 + m,
-      d_mul_2 + m_mul_2,     d_mul_6 + f_mul_2,
-      #
-      d_mul_6 - m_mul_2,     d_mul_10 - m,
-      d_mul_5,               d_mul_4 - f_mul_2,
-      #
-      f_mul_2 + m,           d_mul_12,
-      d_mul_2 + f_mul_2 - m, d - m
-    )
-    cat("\nDEBUG B.\n")
-    corrections_periodic <- sum(
-      (g_vec_apogee_coeff + g_vec_apogee_subtrahend * t) * sin(g_vec_sin_apogee)
-    )
-  }
-
-  # Diagnostic information.
-  if (g_verbosity) {
-    cat("   get_lunar_apsis_jde settings...\n", sep = "")
-    cat("\n   k:")
-    print(k, digits = 20)
-    cat("\n   t:")
-    print(t, digits = 20)
-    cat("\n   d (degrees):")
-    print(angle_radians_to_degrees(d), digits = 20)
-    cat("\n   m (degrees):")
-    print(angle_radians_to_degrees(m), digits = 20)
-    cat("\n   f (degrees):")
-    print(angle_radians_to_degrees(f), digits = 20)
-    cat("\n   mean_apsis: ")
-    print(mean_apsis, digits = 20)
-    cat("\n   corrections_periodic: ")
-    print(corrections_periodic, digits = 20)
-  }
-
-  list(
-    "value" = mean_apsis + corrections_periodic,
-    "uncertainty" = apsis_uncertainty
-  )
+  (date_target >= as.POSIXct(
+    "01-01-2001 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+  )) & (date_target < as.POSIXct(
+    "01-01-2101 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+  ))
 }
 
+make_get_del_t <- function() {
 
-get_lunar_distance <- function(jde_mpfr) {
+  # Assumed global constants.
+  #   g_0_mpfr, g_0_0004_mpfr, g_1_mpfr, g_900_milliseconds.
 
-  # Get the lunar distance, in kilometres, for a given JDE (Julian Ephemeris
-  # Day). See Astronomical Algorithms, Meeus, chapter 47.
+  # Closure constants.
   #
-  # Input:
-  #  jde_mpfr    Target date, in Julian Ephemeris Days, best passed in mpfr
-  #              format with, e.g. 128-bit accuracy.
-  #              E.g. R stores a passed value of 2443259.9 as
-  #                   2443259.8999999999 by default.
-  #                   This easily causes errors of +- 1 second.
+  c_0_36525_mpfr <- mpfr("0.36525", 128L)
+  c_2005_mpfr <- mpfr("2005", 128L)
+  c_2050_mpfr <- mpfr("2050", 128L)
+  #
+  c_threshold_get_del_t <- mpfr(
+    decimal_date(
+      as.POSIXct(
+        "01-01-2021 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+      ) - g_900_milliseconds
+    ), 128L
+  )
+  #
+  c_uncertainty_get_del_t <- mpfr("0.058", 128L) / 3
 
-  if (!is.mpfr(jde_mpfr)) {
-    jde_mpfr <- mpfr(jde_mpfr, 128L)
+  # Body of: get_del_t.
+  function(date_target) {
+
+    # Calculate the difference, del T, in seconds, between dynamical time and
+    # universal time (UT1).
+    #   See Five Millennium Canon of Solar Eclipses: -1999 to +3000
+    #                                                (2000 BCE to 3000 CE).
+    #
+    # Input:
+    #   date_target    Date should be universal time (UT1).
+    #                  It's assumed the target date will be in the 21st century.
+    #
+    # N.B. An exact decimal year is used here. The reference material uses a
+    #      less accurate value rounded to the middle of months.
+    # N.B. Where relevant, a lunar secular acceleration of -26 arcsec/cy^2 is
+    #      assumed.
+
+    # Convert input date to decimal years.
+    #   E.g. 1987.25 is the end of March 1987.
+    #
+    date_target <- mpfr(decimal_date(date_target), 128L)
+
+    # Before 2021...
+    if (date_target < c_threshold_get_del_t) {
+      # As known del T values exist until 31-Dec-2020 23:59:59, del T shouldn't
+      # be estimated on or prior to that.
+      # Allow a 900 millisecond buffer for processing the UT1-UTC uncertainty,
+      # which is always <= 0.9 s.
+      # So, c_threshold_get_del_t is (01-01-2021 00:00:00) - 0.9 s.
+
+      cat("\nError in function get_del_t...")
+      cat("\nInvalid date processing; date_target:\n")
+      print(date_target, digits = 20)
+      stopifnot(FALSE)
+    }
+
+    # Before 2050...
+    if (date_target < c_2050_mpfr) {
+      del_t <- get_del_t_pre_2025(date_target)
+
+    } else { # After 2050...
+      del_t <- get_del_t_post_2025(date_target)
+    }
+
+    # N.B. Here uncertainty is in seconds; algorithm's intrinsic uncertainty.
+    n <- date_target - c_2005_mpfr
+    list(
+      "value" = del_t,
+      "uncertainty" = c_0_36525_mpfr * n *
+        sqrt(n * c_uncertainty_get_del_t * (g_1_mpfr + n * g_0_0004_mpfr))
+    )
   }
+}
 
-  # Input must be >= 0.
-  if (jde_mpfr < g_0_mpfr) {
-    cat("\nError in function get_lunar_distance...")
-    cat("\nInput dynamical time; jde_mpfr:\n")
-    print(jde_mpfr, digits = 20)
-    cat("\nNeed dynamical time >= 0.\n")
-    stopifnot(FALSE)  # Halts program execution due to invalid input.
+make_get_del_t_post_2025 <- function() {
+
+  # Assumed global constants.
+  #   g_0_0032_mpfr.
+
+  # Closure constants.
+  c_11_0852_mpfr <- mpfr("11.0852", 128L)
+  c_9369_66_mpfr <- mpfr("9369.66", 128L)
+
+  # Body of: get_del_t_post_2025.
+  function(t_mpfr) {
+
+    # Calculate "delta t" for years including and after 2025.
+    #
+    # Delta t is the difference in the Earth's rotation period and the length
+    # of an ideal day measured by International Atomic Time (86,400 seconds).
+    #
+    # Input
+    #   t_mpfr  The value of a target decimal year.
+    #           Assumed to be a mpfr value.
+    #
+
+    # We have, del t = -20.0 - 0.5628 * (2150.0 - target date) +
+    #                  32.0 * (((target date - 1820.0) * 0.01) ^ 2)
+    # Or more simply...
+
+    t_mpfr * (g_0_0032_mpfr * t_mpfr - c_11_0852_mpfr) + c_9369_66_mpfr
   }
+}
 
-  # Express the target date as "t" in Julian centuries from epoch 2000.
-  # N.B. See Astronomical Algorithms, Meeus, chapter 22, p. 143.
-  t <- (jde_mpfr - g_2451545_mpfr) / g_36525_mpfr
+make_get_del_t_pre_2025 <- function() {
 
-  # Calculate e, to correct for the (changing) eccentricity of the Earth's
-  # orbit around the Sun.
-  e <- get_eccentric_anomaly(t)
-  e_mul_e <- e * e
+  # Assumed global constants.
+  #   g_2000_mpfr.
 
-  # Calculate the Moon's mean elongation, in radians.
-  d <- angle_degrees_to_radians(
-    g_297_8501921_mpfr +
-      t * (
-        g_445267_1114034_mpfr -
-          t * (g_0_0018819_mpfr - t * (
-            g_lunar_mean_elongation - t / g_113065000_mpfr
-          ))
+  # Closure constants.
+  c_0_005589_mpfr <- mpfr("0.005589", 128L)
+  c_0_32217_mpfr <- mpfr("0.32217", 128L)
+  c_62_92_mpfr <- mpfr("62.92", 128L)
+
+  # Body of: get_del_t_pre_2025.
+  function(t_mpfr) {
+
+    # Calculate "delta t" for years before 2025.
+    #
+    # Delta t is the difference in the Earth's rotation period and the length
+    # of an ideal day measured by International Atomic Time (86,400 seconds).
+    #
+    # Input
+    #   t_mpfr  The value of a target decimal year.
+    #           Assumed to be a mpfr value.
+
+    t_mpfr <- t_mpfr - g_2000_mpfr
+    t_mpfr * (c_0_005589_mpfr * t_mpfr + c_0_32217_mpfr) + c_62_92_mpfr
+  }
+}
+
+make_get_eccentric_anomaly <- function() {
+
+  # Assumed global constants.
+  # g_1_mpfr.
+
+  # Closure constants.
+  c_0_0000074_mpfr <- mpfr("0.0000074", 128L)
+  c_0_002516_mpfr <- mpfr("0.002516", 128L)
+
+  # Body of: get_eccentric_anomaly.
+  function(time_target) {
+
+    # Get the eccentric anomaly, for a given time
+    #   (in Julian centuries from Epoch J2000.0).
+    #
+    # Input:
+    #   time_target    Target time, in Julian centuries from Epoch J2000.0.
+    #                  It's assumed it will be a mpfr value.
+
+    g_1_mpfr - time_target * (c_0_002516_mpfr + time_target * c_0_0000074_mpfr)
+  }
+}
+
+make_get_lunar_apsis_jde <- function() {
+
+  # Assumed global constants.
+  #   g_0_mpfr, g_0_0004_mpfr, g_0_0032_mpfr, g_0_5_mpfr,g_2_mpfr, g_3_mpfr,
+  #   g_4_mpfr.
+
+  # Closure variables.
+  c_vec_sin_apogee <- rep(g_0_mpfr, 32)   # 32-element mpfr zero vector.
+  c_vec_sin_perigee <- rep(g_0_mpfr, 60)  # 60-element mpfr zero vector.
+
+  # Closure constants.
+  #
+  # Lunar apogee calculation coefficients.
+  c_vec_apogee_coeff <- c(
+    mpfr("0.4392", 128L),
+    mpfr("0.0684", 128L),
+    mpfr("0.0456", 128L),
+    mpfr("0.0426", 128L),
+    mpfr("0.0212", 128L),
+    mpfr("-0.0189", 128L),
+    mpfr("0.0144", 128L),
+    mpfr("0.0113", 128L),
+    mpfr("0.0047", 128L),
+    mpfr("0.0036", 128L),
+    mpfr("0.0035", 128L),
+    mpfr("0.0034", 128L),
+    mpfr("-0.0034", 128L),
+    mpfr("0.0022", 128L),
+    mpfr("-0.0017", 128L),
+    mpfr("0.0013", 128L),
+    mpfr("0.0011", 128L),
+    mpfr("0.0010", 128L),
+    mpfr("0.0009", 128L),
+    mpfr("0.0007", 128L),
+    mpfr("0.0006", 128L),
+    rep(mpfr("0.0005", 128L), 2),
+    rep(g_0_0004_mpfr, 3),
+    rep(mpfr("-0.0004", 128L), 2),
+    rep(mpfr("0.0003", 128L), 3),
+    mpfr("-0.0003", 128L)
+  )
+  #
+  c_vec_apogee_subtrahend <- c(
+    rep(g_0_mpfr, 2),
+    rep(mpfr("-0.00011", 128L), 2),
+    rep(g_0_mpfr, 28)
+  )
+  #
+  # Lunar perigee calculation coefficients.
+  c_vec_perigee_coeff <- c(
+    mpfr("-1.6769", 128L),
+    mpfr("0.4589", 128L),
+    mpfr("-0.1856", 128L),
+    mpfr("0.0883", 128L),
+    mpfr("-0.0773", 128L),
+    mpfr("0.0502", 128L),
+    mpfr("-0.0460", 128L),
+    mpfr("0.0422", 128L),
+    mpfr("-0.0256", 128L),
+    mpfr("0.0253", 128L),
+    mpfr("0.0237", 128L),
+    mpfr("0.0162", 128L),
+    mpfr("-0.0145", 128L),
+    mpfr("0.0129", 128L),
+    mpfr("-0.0112", 128L),
+    mpfr("-0.0104", 128L),
+    mpfr("0.0086", 128L),
+    mpfr("0.0069", 128L),
+    mpfr("0.0066", 128L),
+    mpfr("-0.0053", 128L),
+    mpfr("-0.0052", 128L),
+    mpfr("-0.0046", 128L),
+    mpfr("-0.0041", 128L),
+    mpfr("0.0040", 128L),
+    g_0_0032_mpfr,
+    mpfr("-0.0032", 128L),
+    mpfr("0.0031", 128L),
+    mpfr("-0.0029", 128L),
+    rep(mpfr("0.0027", 128L), 2),
+    mpfr("-0.0027", 128L),
+    mpfr("0.0024", 128L),
+    rep(mpfr("-0.0021", 128L), 3),
+    mpfr("0.0019", 128L),
+    mpfr("-0.0018", 128L),
+    rep(mpfr("-0.0014", 128L), 3),
+    mpfr("0.0014", 128L),
+    mpfr("-0.0014", 128L),
+    rep(mpfr("0.0013", 128L), 2),
+    mpfr("0.0011", 128L),
+    mpfr("-0.0011", 128L),
+    mpfr("-0.0010", 128L),
+    mpfr("-0.0009", 128L),
+    mpfr("-0.0008", 128L),
+    rep(mpfr("0.0008", 128L), 2),
+    rep(mpfr("0.0007", 128L), 3),
+    rep(mpfr("-0.0006", 128L), 2),
+    mpfr("0.0006", 128L),
+    rep(mpfr("0.0005", 128L), 2),
+    mpfr("-0.0004", 128L)
+  )
+  c_vec_perigee_subtrahend <- c(
+    rep(g_0_mpfr, 4),
+    mpfr("0.00019", 128L),
+    mpfr("-0.00013", 128L),
+    g_0_mpfr,
+    mpfr("-0.00011", 128L),
+    rep(g_0_mpfr, 52)
+  )
+  #
+  c_neg_0_0006691_mpfr <- mpfr("-0.0006691", 128L)
+  c_0_0000000052_mpfr <- mpfr("0.0000000052", 128L)
+  c_0_000000055_mpfr <- mpfr("0.000000055", 128L)
+  c_0_0000010_mpfr <- mpfr("0.0000010", 128L)
+  c_0_000001098_mpfr <- mpfr("0.000001098", 128L)
+  c_0_00001156_mpfr <- mpfr("0.00001156", 128L)
+  c_0_0000148_mpfr <- mpfr("0.0000148", 128L)
+  c_0_0008130_mpfr <- mpfr("0.0008130", 128L)
+  c_0_0100383_mpfr <- mpfr("0.0100383", 128L)
+  c_0_0125053_mpfr <- mpfr("0.0125053", 128L)
+  c_5_mpfr <- mpfr("5", 128L)
+  c_6_mpfr <- mpfr("6", 128L)
+  c_8_mpfr <- mpfr("8", 128L)
+  c_10_mpfr <- mpfr("10", 128L)
+  c_13_2555_mpfr <- mpfr("13.2555", 128L)
+  c_16_mpfr <- mpfr("16", 128L)
+  c_18_mpfr <- mpfr("18", 128L)
+  c_20_mpfr <- mpfr("20", 128L)
+  c_22_mpfr <- mpfr("22", 128L)
+  c_27_1577721_mpfr <- mpfr("27.1577721", 128L)
+  c_27_55454989_mpfr <- mpfr("27.55454989", 128L)
+  c_171_9179_mpfr <- mpfr("171.9179", 128L)
+  c_316_6109_mpfr <- mpfr("316.6109", 128L)
+  c_335_9106046_mpfr <- mpfr("335.9106046", 128L)
+  c_347_3477_mpfr <- mpfr("347.3477", 128L)
+  c_364_5287911_mpfr <- mpfr("364.5287911", 128L)
+  c_1325_55_mpfr <- mpfr("1325.55", 128L)
+  c_1999_97_mpfr <- mpfr("1999.97", 128L)
+  c_2451534_6698_mpfr <- mpfr("2451534.6698", 128L)
+  #
+  c_apsis_uncertainty_apogee <- 3 / mpfr("1440", 128L)
+  c_apsis_uncertainty_perigee <- 31 / mpfr("1440", 128L)
+
+  # Body of: get_lunar_apsis_jde.
+  function(date_target) {
+
+    # Calculate lunar apsis dates.
+    #   See Astronomical Algorithms, Meeus, chapter 50.
+    #
+    # Input:
+    #   date_target    Date should be a Dynamical Time, as a date/time value.
+
+    # Determine new moon coefficient "k".
+    #   k = 0 corresponds to the perigee of 22nd Dec, 1999.
+    #   Negative values of k give lunar apsides before that perigee.
+    #   - For perigee, round to the nearest integer.
+    #   - For apogee, round to the nearest integer + 0.5.
+    #   Assumes target apsis is a global variable.
+    #
+    #   N.B. Ensure x.5 values are rounded towards zero if negative, but away
+    #        from zero if positive.
+    #   N.B. Round odd and even numbers consistently (R doesn't, by default).
+    #   N.B. Convert target dynamical time to decimal years before use.
+
+    k <- (mpfr(decimal_date(date_target), 128L) - c_1999_97_mpfr) *
+      c_13_2555_mpfr
+
+    if (g_lunar_apsis == "perigee") {
+      k <- floor(g_0_5_mpfr + k)
+      bool_apogee <- FALSE
+      bool_perigee <- TRUE
+
+    } else if (g_lunar_apsis == "apogee") {
+      k <- g_0_5_mpfr + floor(k)
+      bool_apogee <- TRUE
+      bool_perigee <- FALSE
+
+    } else {
+      cat("\nError in function get_lunar_apsis_jde...")
+      cat("\nInvalid lunar apsis; g_lunar_apsis:\n")
+      print(g_lunar_apsis)
+      stopifnot(FALSE)
+    }
+
+    # Determine the approximate time "t" in Julian centuries from epoch 2000.
+    t <- k / c_1325_55_mpfr
+    t_mul_t <- t * t
+
+    # Determine the mean perigee or apogee, in Julian Ephemeris Days "JDE".
+    # Specify the calculation using Horner's Method.
+    mean_apsis <- t_mul_t * (
+      c_neg_0_0006691_mpfr + t * (t * c_0_0000000052_mpfr - c_0_000001098_mpfr)
+    ) + c_27_55454989_mpfr * k + c_2451534_6698_mpfr
+
+    # Calculate the Moon's mean elongation, in radians.
+    d <- angle_degrees_to_radians(
+      t_mul_t * (
+        t * (t * c_0_000000055_mpfr - c_0_00001156_mpfr) - c_0_0100383_mpfr
+      ) + c_171_9179_mpfr + c_335_9106046_mpfr * k
+    )
+    d_mul_2 <- g_2_mpfr * d
+    d_mul_3 <- g_3_mpfr * d
+    d_mul_4 <- g_4_mpfr * d
+    d_mul_5 <- c_5_mpfr * d
+    d_mul_6 <- c_6_mpfr * d
+    d_mul_8 <- c_8_mpfr * d
+    d_mul_10 <- c_10_mpfr * d
+    d_mul_12 <- g_12_mpfr * d
+
+    # Calculate the Sun's mean anomaly, in radians.
+    m <- angle_degrees_to_radians(
+      t_mul_t * (-t * c_0_0000010_mpfr - c_0_0008130_mpfr) + c_347_3477_mpfr +
+        c_27_1577721_mpfr * k
+    )
+    m_mul_2 <- g_2_mpfr * m
+
+    # Calculate the Moon's argument of latitude, in radians.
+    f <- angle_degrees_to_radians(
+      t_mul_t * (-t * c_0_0000148_mpfr - c_0_0125053_mpfr) + c_316_6109_mpfr +
+        c_364_5287911_mpfr * k
+    )
+    f_mul_2 <- g_2_mpfr * f
+
+    # Calculate the first set of periodic corrections, in days.
+    if (isTRUE(bool_perigee)) {
+      # Set apsis-specific uncertainty from Astronomical Algorithms, Meeus,
+      # chapter 50.
+      # N.B. The worst-case uncertainty, not mean uncertainty, is taken here.
+      # N.B. Values here are minutes converted into JDE days, using 1 day = 1440
+      #      minutes.
+      apsis_uncertainty <- c_apsis_uncertainty_perigee
+
+      # Calculate periodic corrections for perigee.
+      d_mul_14 <- g_14_mpfr * d
+      d_mul_16 <- c_16_mpfr * d
+      d_mul_18 <- c_18_mpfr * d
+      d_mul_20 <- c_20_mpfr * d
+      d_mul_22 <- c_22_mpfr * d
+      d_mul_2_pls_m_mul_2 <- d_mul_2 + m_mul_2
+      d_mul_4_pls_f_mul_2 <- d_mul_4 + f_mul_2
+      f_mul_4 <- g_4_mpfr * f
+
+      # Perigee timing periodic calculation coefficients. 60 elements.
+      # N.B. Update the vector in-place.
+      c_vec_sin_perigee[1] <<- d_mul_2
+      c_vec_sin_perigee[2] <<- d_mul_4
+      c_vec_sin_perigee[3] <<- d_mul_6
+      c_vec_sin_perigee[4] <<- d_mul_8
+      c_vec_sin_perigee[5] <<- d_mul_2 - m
+      c_vec_sin_perigee[6] <<- m
+      c_vec_sin_perigee[7] <<- d_mul_10
+      c_vec_sin_perigee[8] <<- d_mul_4 - m
+      c_vec_sin_perigee[9] <<- d_mul_6 - m
+      c_vec_sin_perigee[10] <<- d_mul_12
+      c_vec_sin_perigee[11] <<- d
+      c_vec_sin_perigee[12] <<- d_mul_8 - m
+      c_vec_sin_perigee[13] <<- d_mul_14
+      c_vec_sin_perigee[14] <<- f_mul_2
+      c_vec_sin_perigee[15] <<- d_mul_3
+      c_vec_sin_perigee[16] <<- d_mul_10 - m
+      c_vec_sin_perigee[17] <<- d_mul_16
+      c_vec_sin_perigee[18] <<- d_mul_12 - m
+      c_vec_sin_perigee[19] <<- d_mul_5
+      c_vec_sin_perigee[20] <<- d_mul_2 + f_mul_2
+      c_vec_sin_perigee[21] <<- d_mul_18
+      c_vec_sin_perigee[22] <<- d_mul_14 - m
+      c_vec_sin_perigee[23] <<- g_7_mpfr * d
+      c_vec_sin_perigee[24] <<- d_mul_2 + m
+      c_vec_sin_perigee[25] <<- d_mul_20
+      c_vec_sin_perigee[26] <<- d + m
+      c_vec_sin_perigee[27] <<- d_mul_16 - m
+      c_vec_sin_perigee[28] <<- d_mul_4 + m
+      c_vec_sin_perigee[29] <<- g_9_mpfr * d
+      c_vec_sin_perigee[30] <<- d_mul_4_pls_f_mul_2
+      c_vec_sin_perigee[31] <<- d_mul_2 - m_mul_2
+      c_vec_sin_perigee[32] <<- d_mul_4 - m_mul_2
+      c_vec_sin_perigee[33] <<- d_mul_6 - m_mul_2
+      c_vec_sin_perigee[34] <<- d_mul_22
+      c_vec_sin_perigee[35] <<- d_mul_18 - m
+      c_vec_sin_perigee[36] <<- d_mul_6 + m
+      c_vec_sin_perigee[37] <<- g_11_mpfr * d
+      c_vec_sin_perigee[38] <<- d_mul_8 + m
+      c_vec_sin_perigee[39] <<- d_mul_4 - f_mul_2
+      c_vec_sin_perigee[40] <<- d_mul_6 + f_mul_2
+      c_vec_sin_perigee[41] <<- d_mul_3 + m
+      c_vec_sin_perigee[42] <<- d_mul_5 + m
+      c_vec_sin_perigee[43] <<- g_13_mpfr * d
+      c_vec_sin_perigee[44] <<- d_mul_20 - m
+      c_vec_sin_perigee[45] <<- d_mul_3 + m_mul_2
+      c_vec_sin_perigee[46] <<- d_mul_4_pls_f_mul_2 - m_mul_2
+      c_vec_sin_perigee[47] <<- d + m_mul_2
+      c_vec_sin_perigee[48] <<- d_mul_22 - m
+      c_vec_sin_perigee[49] <<- f_mul_4
+      c_vec_sin_perigee[50] <<- d_mul_6 - f_mul_2
+      c_vec_sin_perigee[51] <<- d_mul_2 - f_mul_2 + m
+      c_vec_sin_perigee[52] <<- m_mul_2
+      c_vec_sin_perigee[53] <<- f_mul_2 - m
+      c_vec_sin_perigee[54] <<- d_mul_2 + f_mul_4
+      c_vec_sin_perigee[55] <<- f_mul_2 - m_mul_2
+      c_vec_sin_perigee[56] <<- d_mul_2_pls_m_mul_2 - f_mul_2
+      c_vec_sin_perigee[57] <<- g_24_mpfr * d
+      c_vec_sin_perigee[58] <<- d_mul_4 - f_mul_4
+      c_vec_sin_perigee[59] <<- d_mul_2_pls_m_mul_2
+      c_vec_sin_perigee[60] <<- d - m
+
+      corrections_periodic <- sum(
+        (c_vec_perigee_coeff + c_vec_perigee_subtrahend * t) *
+          sin(c_vec_sin_perigee)
       )
-  )
 
-  # Calculate the Sun's mean anomaly, in radians.
-  m <- angle_degrees_to_radians(
-    g_357_5291092_mpfr +
-      t * (g_35999_0502909_mpfr - t * (g_0_0001536_mpfr - t / g_24490000_mpfr))
-  )
+    } else {
+      # Set apsis-specific uncertainty.
+      # N.B. Values here are minutes converted into JDE days, using 1 day = 1440
+      #      minutes.
+      apsis_uncertainty <- c_apsis_uncertainty_apogee
 
-  # Calculate the Moon's mean anomaly, in radians.
-  m_prime <- angle_degrees_to_radians(
-    g_134_9633964_mpfr +
-      t * (
-        g_477198_8675055_mpfr +
-          t * (
-            g_0_0087414_mpfr + t * (g_lunar_mean_anomaly - t / g_14712000_mpfr)
-          )
+      # Calculate periodic corrections for apogee. 32 elements.
+      # N.B. Update the vector in-place.
+
+      c_vec_sin_apogee[1] <<- d_mul_2
+      c_vec_sin_apogee[2] <<- d_mul_4
+      c_vec_sin_apogee[3] <<- m
+      c_vec_sin_apogee[4] <<- d_mul_2 - m
+      c_vec_sin_apogee[5] <<- f_mul_2
+      c_vec_sin_apogee[6] <<- d
+      c_vec_sin_apogee[7] <<- d_mul_6
+      c_vec_sin_apogee[8] <<- d_mul_4 - m
+      c_vec_sin_apogee[9] <<- d_mul_2 + f_mul_2
+      c_vec_sin_apogee[10] <<- d + m
+      c_vec_sin_apogee[11] <<- d_mul_8
+      c_vec_sin_apogee[12] <<- d_mul_6 - m
+      c_vec_sin_apogee[13] <<- d_mul_2 - f_mul_2
+      c_vec_sin_apogee[14] <<- d_mul_2 - m_mul_2
+      c_vec_sin_apogee[15] <<- d_mul_3
+      c_vec_sin_apogee[16] <<- d_mul_4 + f_mul_2
+      c_vec_sin_apogee[17] <<- d_mul_8 - m
+      c_vec_sin_apogee[18] <<- d_mul_4 - m_mul_2
+      c_vec_sin_apogee[19] <<- d_mul_10
+      c_vec_sin_apogee[20] <<- d_mul_3 + m
+      c_vec_sin_apogee[21] <<- m_mul_2
+      c_vec_sin_apogee[22] <<- d_mul_2 + m
+      c_vec_sin_apogee[23] <<- d_mul_2 + m_mul_2
+      c_vec_sin_apogee[24] <<- d_mul_6 + f_mul_2
+      c_vec_sin_apogee[25] <<- d_mul_6 - m_mul_2
+      c_vec_sin_apogee[26] <<- d_mul_10 - m
+      c_vec_sin_apogee[27] <<- d_mul_5
+      c_vec_sin_apogee[28] <<- d_mul_4 - f_mul_2
+      c_vec_sin_apogee[29] <<- f_mul_2 + m
+      c_vec_sin_apogee[30] <<- d_mul_12
+      c_vec_sin_apogee[31] <<- d_mul_2 + f_mul_2 - m
+      c_vec_sin_apogee[32] <<- d - m
+
+      corrections_periodic <- sum(
+        (c_vec_apogee_coeff + c_vec_apogee_subtrahend * t) *
+          sin(c_vec_sin_apogee)
       )
-  )
+    }
 
-  # Calculate the Moon's argument of latitude, in radians.
-  f_mul_2 <- g_2_mpfr * angle_degrees_to_radians(
-    g_93_272095_mpfr +
-      t * (
-        g_483202_0175233_mpfr -
-          t * (
-            g_0_0036539_mpfr +
-              t * (g_lunar_argument_latitude - t / g_863310000_mpfr)
-          )
-      )
-  )
+    # Diagnostic information.
+    if (g_verbosity) {
+      cat("   get_lunar_apsis_jde settings...\n", sep = "")
+      cat("\n   k:")
+      print(k, digits = 20)
+      cat("\n   t:")
+      print(t, digits = 20)
+      cat("\n   d (degrees):")
+      print(angle_radians_to_degrees(d), digits = 20)
+      cat("\n   m (degrees):")
+      print(angle_radians_to_degrees(m), digits = 20)
+      cat("\n   f (degrees):")
+      print(angle_radians_to_degrees(f), digits = 20)
+      cat("\n   mean_apsis: ")
+      print(mean_apsis, digits = 20)
+      cat("\n   corrections_periodic: ")
+      print(corrections_periodic, digits = 20)
+    }
 
-  # Calculate periodic distance terms. 46 elements.
-  # N.B. Update an existing global vector in-place.
+    list(
+      "value" = mean_apsis + corrections_periodic,
+      "uncertainty" = apsis_uncertainty
+    )
+  }
+}
+
+make_get_lunar_distance <- function() {
+
+  # Assumed global constants.
+  #   g_0_mpfr, g_1_mpfr, g_2_mpfr.
+
+  # Closure variables.
+  
+  # Periodic distance term vector and masks. 46 elements.
   #
   # Indices of elements initialised to g_1_mpfr:
   #   1, 2, 3, 4, 6, 7, 9, 12, 14, 15, 16, 17, 18, 21, 24, 25, 26, 29, 33, 35,
@@ -1211,390 +892,899 @@ get_lunar_distance <- function(jde_mpfr) {
   #  37 e         38 e_mul_e   39 e_mul_e   40 g_1_mpfr
   #  41 g_1_mpfr  42 e         43 g_1_mpfr  44 g_1_mpfr
   #  45 e_mul_e   46 g_1_mpfr
-
-  g_vec_e[g_vec_e_mask_e] <- e
-  g_vec_e[g_vec_e_mask_e_mul_e] <- e_mul_e
-
-  distance_value <- g_385000_56_mpfr +
-    sum(
-      g_vec_ld_coeff * g_vec_e *
-        cos(
-          d * g_mask_distance_d + f_mul_2 * g_mask_distance_f_mul_2 +
-            m * g_mask_distance_m + m_prime * g_mask_distance_m_prime
-        )
-    ) * g_0_001_mpfr
-
-  # Diagnostic information.
-  if (g_verbosity) {
-    cat("   get_lunar_distance...\n", sep = "")
-    cat("\n   t:")
-    print(t, digits = 20)
-    cat("\n   e:")
-    print(e, digits = 20)
-    cat("\n   d (degrees):")
-    print(angle_radians_to_degrees(d), digits = 20)
-    cat("\n   m (degrees):")
-    print(angle_radians_to_degrees(m), digits = 20)
-    cat("\n   m_prime (degrees):")
-    print(angle_radians_to_degrees(m_prime), digits = 20)
-    cat("\n   F (degrees):")
-    print(angle_radians_to_degrees(f_mul_2 * 0.5), digits = 20)
-    cat("\n   distance_periodic: ")
-    print((distance_value - g_385000_56_mpfr) * g_1000_mpfr, digits = 20)
-  }
-
-  # Determine uncertainty by comparison to the complete ELP-2000/82 theory.
-  # The geocentric lunar position vector is returned in element four.
-  result <- call_elp82b_2(jde_mpfr)[[4]]
-
-  # ELP-2000/82 distance is the length derived from its three Cartesian
-  # coordinate vectors.
-  list(
-    "value" = distance_value,
-    "uncertainty" = abs(
-      sqrt(
-        result[1] * result[1] +
-          result[2] * result[2] +
-          result[3] * result[3]
-      ) - distance_value
-    )
+  #
+  c_vec_e <- rep(g_1_mpfr, 46)
+  c_vec_e_mask_e <- c(
+    5, 8, 10, 11, 13, 19, 20, 22, 23, 27, 28, 31, 34, 36, 37, 42
   )
+  c_vec_e_mask_e_mul_e <- c(30, 32, 38, 39, 45)
+  
+  # Closure constants.
+  #
+  # Lunar distance periodic calculation coefficients.
+  c_vec_ld_coeff <- c(
+    -20905355, -3699111, -2955968, -569925,
+    48888, -3149, 246158, -152138,
+    -170733, -204586, -129620, 108743,
+    104755, 10321, 79661, -34782,
+    -23210, -21636, 24208, 30824,
+    -8379, -16675, -12831, -10445,
+    -11650, 14403, -7003, 10056,
+    6322, -9884, 5751, -4950,
+    4130, -3958, 3258, 2616,
+    -1897, -2117, 2354, -1423,
+    -1117, -1571, -1739, -4421,
+    1165, 8752
+  )
+  # Lunar distance masks for vectorised operations.
+  c_mask_distance_d <- c(0,
+                         2,
+                         2,
+                         0,
+                         0,
+                         0,
+                         2,
+                         2,
+                         2,
+                         2,
+                         0,
+                         1,
+                         0,
+                         2,
+                         0,
+                         4,
+                         0,
+                         4,
+                         2,
+                         2,
+                         1,
+                         1,
+                         2,
+                         2,
+                         4,
+                         2,
+                         0,
+                         2,
+                         1,
+                         2,
+                         0,
+                         2,
+                         2,
+                         4,
+                         3,
+                         2,
+                         4,
+                         0,
+                         2,
+                         4,
+                         0,
+                         4,
+                         1,
+                         0,
+                         0,
+                         2)
+  #
+  c_mask_distance_f_mul_2 <- c(0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               1,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               -1,
+                               -1,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               -1,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               -1,
+                               0,
+                               -1)
+  #
+  c_mask_distance_m <- c(0,
+                         0,
+                         0,
+                         0,
+                         1,
+                         0,
+                         0,
+                         -1,
+                         0,
+                         -1,
+                         1,
+                         0,
+                         1,
+                         0,
+                         0,
+                         0,
+                         0,
+                         0,
+                         1,
+                         1,
+                         0,
+                         1,
+                         -1,
+                         0,
+                         0,
+                         0,
+                         1,
+                         -1,
+                         0,
+                         -2,
+                         1,
+                         -2,
+                         0,
+                         -1,
+                         0,
+                         1,
+                         -1,
+                         2,
+                         2,
+                         0,
+                         0,
+                         -1,
+                         0,
+                         0,
+                         2,
+                         0)
+  #
+  c_mask_distance_m_prime <- c(1,
+                               -1,
+                               0,
+                               2,
+                               0,
+                               0,
+                               -2,
+                               -1,
+                               1,
+                               0,
+                               -1,
+                               0,
+                               1,
+                               0,
+                               1,
+                               -1,
+                               3,
+                               -2,
+                               -1,
+                               0,
+                               -1,
+                               0,
+                               1,
+                               2,
+                               0,
+                               -3,
+                               -2,
+                               -2,
+                               1,
+                               0,
+                               2,
+                               -1,
+                               1,
+                               -1,
+                               -1,
+                               1,
+                               -2,
+                               -1,
+                               -1,
+                               1,
+                               4,
+                               0,
+                               -2,
+                               2,
+                               1,
+                               -1)
+  #
+  c_0_0001536_mpfr <- mpfr("0.0001536", 128L)
+  c_0_001_mpfr <- mpfr("0.001", 128L)
+  c_0_0018819_mpfr <- mpfr("0.0018819", 128L)
+  c_0_0036539_mpfr <- mpfr("0.0036539", 128L)
+  c_0_0087414_mpfr <- mpfr("0.0087414", 128L)
+  c_93_272095_mpfr <- mpfr("93.272095", 128L)
+  c_134_9633964_mpfr <- mpfr("134.9633964", 128L)
+  c_297_8501921_mpfr <- mpfr("297.8501921", 128L)
+  c_357_5291092_mpfr <- mpfr("357.5291092", 128L)
+  c_1000_mpfr <- mpfr("1000", 128L)
+  c_35999_0502909_mpfr <- mpfr("35999.0502909", 128L)
+  c_36525_mpfr <- mpfr("36525", 128L)
+  c_385000_56_mpfr <- mpfr("385000.56", 128L)
+  c_445267_1114034_mpfr <- mpfr("445267.1114034", 128L)
+  c_477198_8675055_mpfr <- mpfr("477198.8675055", 128L)
+  c_483202_0175233_mpfr <- mpfr("483202.0175233", 128L)
+  c_2451545_mpfr <- mpfr("2451545", 128L)
+  c_14712000_mpfr <- mpfr("14712000", 128L)
+  c_24490000_mpfr <- mpfr("24490000", 128L)
+  c_113065000_mpfr <- mpfr("113065000", 128L)
+  c_863310000_mpfr <- mpfr("863310000", 128L)
+  #
+  c_lunar_argument_latitude <- 1 / mpfr("3526000", 128L)
+  c_lunar_mean_anomaly <- 1 / mpfr("69699", 128L)
+  c_lunar_mean_elongation <- 1 / mpfr("545868", 128L)
+
+  # Body of: get_lunar_distance.
+  function(jde_mpfr) {
+
+    # Get the lunar distance, in kilometres, for a given JDE (Julian Ephemeris
+    # Day). See Astronomical Algorithms, Meeus, chapter 47.
+    #
+    # Input:
+    #  jde_mpfr    Target date, in Julian Ephemeris Days, best passed in mpfr
+    #              format with, e.g. 128-bit accuracy.
+    #              E.g. R stores a passed value of 2443259.9 as
+    #                   2443259.8999999999 by default.
+    #                   This easily causes errors of +- 1 second.
+
+    if (!is.mpfr(jde_mpfr)) {
+      jde_mpfr <- mpfr(jde_mpfr, 128L)
+    }
+
+    # Input must be >= 0.
+    if (jde_mpfr < g_0_mpfr) {
+      cat("\nError in function get_lunar_distance...")
+      cat("\nInput dynamical time; jde_mpfr:\n")
+      print(jde_mpfr, digits = 20)
+      cat("\nNeed dynamical time >= 0.\n")
+      stopifnot(FALSE)  # Halts program execution due to invalid input.
+    }
+
+    # Express the target date as "t" in Julian centuries from epoch 2000.
+    # N.B. See Astronomical Algorithms, Meeus, chapter 22, p. 143.
+    t <- (jde_mpfr - c_2451545_mpfr) / c_36525_mpfr
+
+    # Calculate e, to correct for the (changing) eccentricity of the Earth's
+    # orbit around the Sun.
+    e <- get_eccentric_anomaly(t) # t will be a mpfr value here.
+    e_mul_e <- e * e
+
+    # Calculate the Moon's mean elongation, in radians.
+    d <- angle_degrees_to_radians(
+      c_297_8501921_mpfr +
+        t * (
+          c_445267_1114034_mpfr -
+            t * (c_0_0018819_mpfr - t * (
+              c_lunar_mean_elongation - t / c_113065000_mpfr
+            ))
+        )
+    )
+
+    # Calculate the Sun's mean anomaly, in radians.
+    m <- angle_degrees_to_radians(
+      c_357_5291092_mpfr +
+        t * (
+          c_35999_0502909_mpfr - t * (c_0_0001536_mpfr - t / c_24490000_mpfr)
+        )
+    )
+
+    # Calculate the Moon's mean anomaly, in radians.
+    m_prime <- angle_degrees_to_radians(
+      c_134_9633964_mpfr +
+        t * (
+          c_477198_8675055_mpfr +
+            t * (
+              c_0_0087414_mpfr +
+                t * (c_lunar_mean_anomaly - t / c_14712000_mpfr)
+            )
+        )
+    )
+
+    # Calculate the Moon's argument of latitude, in radians.
+    f_mul_2 <- g_2_mpfr * angle_degrees_to_radians(
+      c_93_272095_mpfr +
+        t * (
+          c_483202_0175233_mpfr -
+            t * (
+              c_0_0036539_mpfr +
+                t * (c_lunar_argument_latitude - t / c_863310000_mpfr)
+            )
+        )
+    )
+
+    # Calculate periodic distance terms.
+    # N.B. Update an existing global vector in-place.
+    c_vec_e[c_vec_e_mask_e] <<- e
+    c_vec_e[c_vec_e_mask_e_mul_e] <<- e_mul_e
+
+    distance_value <- c_385000_56_mpfr +
+      sum(
+        c_vec_ld_coeff * c_vec_e *
+          cos(
+            d * c_mask_distance_d + f_mul_2 * c_mask_distance_f_mul_2 +
+              m * c_mask_distance_m + m_prime * c_mask_distance_m_prime
+          )
+      ) * c_0_001_mpfr
+
+    # Diagnostic information.
+    if (g_verbosity) {
+      cat("   get_lunar_distance...\n", sep = "")
+      cat("\n   t:")
+      print(t, digits = 20)
+      cat("\n   e:")
+      print(e, digits = 20)
+      cat("\n   d (degrees):")
+      print(angle_radians_to_degrees(d), digits = 20)
+      cat("\n   m (degrees):")
+      print(angle_radians_to_degrees(m), digits = 20)
+      cat("\n   m_prime (degrees):")
+      print(angle_radians_to_degrees(m_prime), digits = 20)
+      cat("\n   F (degrees):")
+      print(angle_radians_to_degrees(f_mul_2 * 0.5), digits = 20)
+      cat("\n   distance_periodic: ")
+      print((distance_value - c_385000_56_mpfr) * c_1000_mpfr, digits = 20)
+    }
+
+    # Determine uncertainty by comparison to the complete ELP-2000/82 theory.
+    #
+    # ELP-2000/82 distance is the length derived from its three Cartesian
+    # coordinate vectors.
+    #
+    # N.B. sqrt(crossprod(vec)[1]) = sqrt(vec[1]^2 + vec[2]^2 + vec[3]^2)
+    #      but is generally faster.
+    #
+    distance_uncertainty <- mpfr(
+      sqrt(crossprod(call_elp82b_2(jde_mpfr))[1]), 128L
+    )
+
+    list(
+      "value" = distance_value,
+      "uncertainty" = abs(distance_uncertainty - distance_value)
+    )
+  }
 }
 
+make_get_lunar_phase_jde <- function() {
 
-get_lunar_phase_jde <- function(date_target) {
+  # Assumed global constants.
+  #   g_0_mpfr, g_0_25_mpfr, g_0_5_mpfr, g_1_mpfr, g_2_mpfr, g_3_mpfr, g_4_mpfr,
+  #   g_13_mpfr, g_2000_mpfr.
 
-  # Calculate lunar phase dates.
-  #   See Astronomical Algorithms, Meeus, chapter 49.
+
+  # Closure variables.
+
+  # Full or new moon: periodic corrections term vector and masks.
+  # Set A. 25 elements.
   #
-  # Input:
-  #   date_target    Date should be a Dynamical Time, as a date/time value.
-
-  # Determine new moon coefficient "k".
-  #   k = 0 corresponds to the New Moon of 6th Jan, 2000.
-  #   Negative values of k give lunar phases before the year 2000.
-  #   - If new moon, round to the nearest integer.
-  #   - If first quarter moon, round to the nearest integer + 0.25.
-  #   - If full moon, round to the nearest integer + 0.5.
-  #   - If last quarter moon, round to the nearest integer + 0.75.
-  #   Assumes target phase is a global variable.
+  # Indices of elements initialised to g_1_mpfr:
+  #   1, 3, 4, 8, 9, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25.
   #
-  #   N.B. Ensure x.5 values are rounded towards zero if negative, but away
-  #        from zero if positive.
-  #   N.B. Round odd and even numbers consistently (R doesn't, by default).
-  #   N.B. Convert target dynamical time to decimal years before use.
+  # Indices of elements holding e:
+  #   2, 5, 6, 10, 12, 13, 14.
+  #
+  # Indices of elements holding e_mul_e:
+  #   7.
+  #
+  # Index reference:
+  #
+  #   1 g_1_mpfr   2 e          3 g_1_mpfr   4 g_1_mpfr
+  #   5 e          6 e          7 e_mul_e    8 g_1_mpfr
+  #   9 g_1_mpfr  10 e         11 g_1_mpfr  12 e
+  #  13 e         14 e         15 g_1_mpfr  16 g_1_mpfr
+  #  17 g_1_mpfr  18 g_1_mpfr  19 g_1_mpfr  20 g_1_mpfr
+  #  21 g_1_mpfr  22 g_1_mpfr  23 g_1_mpfr  24 g_1_mpfr
+  #  25 g_1_mpfr
+  #
+  c_vec_ph_e <- c(rep(g_1_mpfr, 25))
+  c_vec_ph_e_mask_e <- c(2, 5, 6, 10, 12, 13, 14)
+  c_vec_ph_e_mask_e_mul_e <- 7
+  #
+  # Full or new moon: periodic corrections term vector.
+  # Set B. 25 elements.
+  c_vec_ph_sin <- c(rep(g_0_mpfr, 25))  
 
-  k <- (mpfr(decimal_date(date_target), 128L) - g_2000_mpfr) * g_12_3685_mpfr
-  if (g_lunar_phase == "full moon") {
-    k <- g_0_5_mpfr + floor(k)
+
+  # Quarter moon: periodic corrections term vector and masks.
+  # Set A. 25 elements.
+  #
+  # Indices of elements initialised to g_1_mpfr:
+  #   1, 4, 5, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25.
+  #
+  # Indices of elements holding e:
+  #   2, 3, 6, 11, 12, 13, 15.
+  #
+  # Indices of elements holding e_mul_e:
+  #   7, 14.
+  #
+  # Index reference:
+  #
+  #   1  g_1_mpfr   2  e          3  e          4  g_1_mpfr
+  #   5  g_1_mpfr   6  e          7  e_mul_e    8  g_1_mpfr
+  #   9  g_1_mpfr  10  g_1_mpfr  11  e         12  e
+  #  13  e         14  e_mul_e   15  e         16  g_1_mpfr
+  #  17  g_1_mpfr  18  g_1_mpfr  19  g_1_mpfr  20  g_1_mpfr
+  #  21  g_1_mpfr  22  g_1_mpfr  23  g_1_mpfr  24  g_1_mpfr
+  #  25  g_1_mpfr
+  #
+  c_vec_ph_qrt_e <- c(rep(g_1_mpfr, 25))
+  c_vec_ph_qrt_e_mask_e <- c(2, 3, 6, 11, 12, 13, 15)
+  c_vec_ph_qrt_e_mask_e_mul_e <- c(7, 14)
+  #
+  # Quarter moon: periodic corrections term vector.
+  # Set B. ? elements.
+  c_vec_ph_qrt_sin <- c(rep(g_0_mpfr, 25))
+
+
+  # Supplemental quarter phase corrections A: term vector and mask. 5 elements.
+  #
+  # Indices of elements initialised to g_1_mpfr:
+  #   2, 3, 4, 5.
+  #
+  # Indices of elements holding e:
+  #   1.
+  #
+  # Index reference:
+  #
+  #   1 e  2 g_1_mpfr  3 g_1_mpfr  4 g_1_mpfr  5 g_1_mpfr
+  #
+  c_vec_ph_sup_e <- c(rep(g_1_mpfr, 5))
+  c_vec_ph_sup_e_mask_e <- 1
+
+  # Supplemental quarter phase corrections B: term vector. 5 elements.
+  c_vec_ph_sup_cos <- c(rep(g_0_mpfr, 5))
+
+  # Closure constants.
+
+  # Lunar phase (full moon) calculation coefficients.
+  c_vec_ph_full_coeff <- c(
+    mpfr("-0.40614", 128L),
+    mpfr("0.17302", 128L),
+    mpfr("0.01614", 128L),
+    mpfr("0.01043", 128L),
+    mpfr("0.00734", 128L),
+    mpfr("-0.00515", 128L),
+    mpfr("0.00209", 128L),
+    mpfr("-0.00111", 128L),
+    mpfr("-0.00057", 128L),
+    mpfr("0.00056", 128L),
+    mpfr("-0.00042", 128L),
+    mpfr("0.00042", 128L),
+    mpfr("0.00038", 128L),
+    mpfr("-0.00024", 128L),
+    mpfr("-0.00017", 128L),
+    mpfr("-0.00007", 128L),
+    rep(mpfr("0.00004", 128L), 2),
+    rep(mpfr("0.00003", 128L), 2),
+    mpfr("-0.00003", 128L),
+    mpfr("0.00003", 128L),
+    rep(mpfr("-0.00002", 128L), 2),
+    mpfr("0.00002", 128L)
+  )
+
+  # Lunar phase (new moon) calculation coefficients.
+  c_vec_ph_new_coeff <- c(
+    mpfr("-0.40720", 128L),
+    mpfr("0.17241", 128L),
+    mpfr("0.01608", 128L),
+    mpfr("0.01039", 128L),
+    mpfr("0.00739", 128L),
+    mpfr("-0.00514", 128L),
+    mpfr("0.00208", 128L),
+    mpfr("-0.00111", 128L),
+    mpfr("-0.00057", 128L),
+    mpfr("0.00056", 128L),
+    mpfr("-0.00042", 128L),
+    mpfr("0.00042", 128L),
+    mpfr("0.00038", 128L),
+    mpfr("-0.00024", 128L),
+    mpfr("-0.00017", 128L),
+    mpfr("-0.00007", 128L),
+    rep(mpfr("0.00004", 128L), 2),
+    rep(mpfr("0.00003", 128L), 2),
+    mpfr("-0.00003", 128L),
+    mpfr("0.00003", 128L),
+    rep(mpfr("-0.00002", 128L), 2),
+    mpfr("0.00002", 128L)
+  )
+
+  # Lunar phase (quarter phase) calculation coefficients.
+  c_vec_ph_qrt_coeff <- c(
+    mpfr("-0.62801", 128L),
+    mpfr("0.17172", 128L),
+    mpfr("-0.01183", 128L),
+    mpfr("0.00862", 128L),
+    mpfr("0.00804", 128L),
+    mpfr("0.00454", 128L),
+    mpfr("0.00204", 128L),
+    mpfr("-0.00180", 128L),
+    mpfr("-0.00070", 128L),
+    mpfr("-0.00040", 128L),
+    mpfr("-0.00034", 128L),
+    rep(mpfr("0.00032", 128L), 2),
+    mpfr("-0.00028", 128L),
+    mpfr("0.00027", 128L),
+    mpfr("-0.00017", 128L),
+    mpfr("-0.00005", 128L),
+    mpfr("0.00004", 128L),
+    mpfr("-0.00004", 128L),
+    mpfr("0.00004", 128L),
+    rep(mpfr("0.00003", 128L), 2),
+    rep(mpfr("0.00002", 128L), 2),
+    mpfr("-0.00002", 128L)
+  )
+
+  # Lunar phase (quarter phase) supplemental corrections.
+  c_vec_ph_sup_coeff <- c(
+    mpfr("-0.00038", 128L),
+    mpfr(" 0.00026", 128L),
+    mpfr("-0.00002", 128L),
+    rep(mpfr("0.00002", 128L), 2)
+  )
+
+  # Lunar phase additional corrections coefficients.
+  c_vec_ph_add_coeff_outer <- c(
+    mpfr("0.000325", 128L),
+    mpfr("0.000165", 128L),
+    mpfr("0.000164", 128L),
+    mpfr("0.000126", 128L),
+    mpfr("0.000110", 128L),
+    mpfr("0.000062", 128L),
+    mpfr("0.000060", 128L),
+    mpfr("0.000056", 128L),
+    mpfr("0.000047", 128L),
+    mpfr("0.000042", 128L),
+    mpfr("0.000040", 128L),
+    mpfr("0.000037", 128L),
+    mpfr("0.000035", 128L),
+    mpfr("0.000023", 128L)
+  )
+  #
+  c_vec_ph_add_addend <- c(
+    mpfr("299.77", 128L),
+    mpfr("251.88", 128L),
+    mpfr("251.83", 128L),
+    mpfr("349.42", 128L),
+    mpfr("84.66", 128L),
+    mpfr("141.74", 128L),
+    mpfr("207.14", 128L),
+    mpfr("154.84", 128L),
+    mpfr("34.52", 128L),
+    mpfr("207.19", 128L),
+    mpfr("291.34", 128L),
+    mpfr("161.72", 128L),
+    mpfr("239.56", 128L),
+    mpfr("331.55", 128L)
+  )
+  #
+  c_vec_ph_add_coeff_inner <- c(
+    mpfr("0.107408", 128L),
+    mpfr("0.016321", 128L),
+    mpfr("26.651886", 128L),
+    mpfr("36.412478", 128L),
+    mpfr("18.206239", 128L),
+    mpfr("53.303771", 128L),
+    mpfr("2.453732", 128L),
+    mpfr("7.306860", 128L),
+    mpfr("27.261239", 128L),
+    mpfr("0.121824", 128L),
+    mpfr("1.844379", 128L),
+    mpfr("24.198154", 128L),
+    mpfr("25.513099", 128L),
+    mpfr("3.592518", 128L)
+  )
+  #
+  c_vec_ph_add_subtrahend <- c(
+    mpfr("0.009173", 128L),
+    rep(g_0_mpfr, 13)
+  )
+
+  c_0_00000000073_mpfr <- mpfr("0.00000000073", 128L)
+  c_0_000000011_mpfr <- mpfr("0.000000011", 128L)
+  c_0_000000058_mpfr <- mpfr("0.000000058", 128L)
+  c_0_00000011_mpfr <- mpfr("0.00000011", 128L)
+  c_0_00000015_mpfr <- mpfr("0.00000015", 128L)
+  c_0_0000014_mpfr <- mpfr("0.0000014", 128L)
+  c_0_00000215_mpfr <- mpfr("0.00000215", 128L)
+  c_0_00000227_mpfr <- mpfr("0.00000227", 128L)
+  c_0_00001238_mpfr <- mpfr("0.00001238", 128L)
+  c_0_00015437 <- mpfr("0.00015437", 128L)
+  c_0_0016118 <- mpfr("0.0016118", 128L)
+  c_0_0020672 <- mpfr("0.0020672", 128L)
+  c_0_00306_mpfr <- mpfr("0.00306", 128L)
+  c_0_0107582 <- mpfr("0.0107582", 128L)
+  c_0_75_mpfr <- mpfr("0.75", 128L)
+  c_1_56375588_mpfr <- mpfr("1.56375588", 128L)
+  c_2_5534_mpfr <- mpfr("2.5534", 128L)
+  c_12_3685_mpfr <- mpfr("12.3685", 128L)
+  c_29_1053567_mpfr <- mpfr("29.1053567", 128L)
+  c_29_530588861_mpfr <- mpfr("29.530588861", 128L)
+  c_124_7746_mpfr <- mpfr("124.7746", 128L)
+  c_160_7108_mpfr <- mpfr("160.7108", 128L)
+  c_201_5643_mpfr <- mpfr("201.5643", 128L)
+  c_385_81693528_mpfr <- mpfr("385.81693528", 128L)
+  c_390_67050284_mpfr <- mpfr("390.67050284", 128L)
+  c_1236_85_mpfr <- mpfr("1236.85", 128L)
+  c_2451550_09766_mpfr <- mpfr("2451550.09766", 128L)
+  #
+  c_phase_uncertainty_first_qrt <- mpfr("15.3", 128L) / 86400
+  c_phase_uncertainty_full_moon <- mpfr("17.4", 128L) / 86400
+  c_phase_uncertainty_last_qrt <- g_13_mpfr / 86400
+  c_phase_uncertainty_new_moon <- mpfr("16.4", 128L) / 86400
+
+  # Body of: get_lunar_phase_jde.
+  function(date_target) {
+
+    # Calculate lunar phase dates.
+    #   See Astronomical Algorithms, Meeus, chapter 49.
+    #
+    # Input:
+    #   date_target    Date should be a Dynamical Time, as a date/time value.
+
+    # Determine new moon coefficient "k".
+    #   k = 0 corresponds to the New Moon of 6th Jan, 2000.
+    #   Negative values of k give lunar phases before the year 2000.
+    #   - If new moon, round to the nearest integer.
+    #   - If first quarter moon, round to the nearest integer + 0.25.
+    #   - If full moon, round to the nearest integer + 0.5.
+    #   - If last quarter moon, round to the nearest integer + 0.75.
+    #   Assumes target phase is a global variable.
+    #
+    #   N.B. Ensure x.5 values are rounded towards zero if negative, but away
+    #        from zero if positive.
+    #   N.B. Round odd and even numbers consistently (R doesn't, by default).
+    #   N.B. Convert target dynamical time to decimal years before use.
 
     # Set phase-specific uncertainty from Astronomical Algorithms, Meeus,
     # chapter 49, p. 354.
     # N.B. The worst-case uncertainty, not mean uncertainty, is taken here.
     # N.B. Values here are seconds converted into JDE days,
     #      using 1 day = 86,400 seconds.
-    phase_uncertainty <- g_phase_uncertainty_full_moon
-
-  } else if (g_lunar_phase == "last quarter") {
-    k <- sign(k) * g_0_75_mpfr + floor(g_0_5_mpfr - sign(k) * g_0_75_mpfr + k)
-    phase_uncertainty <- g_phase_uncertainty_last_qrt
-
-  } else if (g_lunar_phase == "new moon") {
-    k <- floor(g_0_5_mpfr + k)
-    phase_uncertainty <- g_phase_uncertainty_new_moon
-
-  } else if (g_lunar_phase == "first quarter") {
-    k <- sign(k) * g_0_25_mpfr + floor(g_0_5_mpfr - sign(k) * g_0_25_mpfr + k)
-    phase_uncertainty <- g_phase_uncertainty_first_qrt
-
-  } else {
-    cat("\nError in function get_lunar_phase_jde...")
-    cat("\nInvalid lunar phase; g_lunar_phase:\n")
-    print(g_lunar_phase)
-    stopifnot(FALSE)
-  }
-
-  # Determine the approximate time "t" in Julian centuries from epoch 2000.
-  t <- k / g_1236_85_mpfr
-  t_mul_t <- t * t
-
-  # Determine the mean lunar phase, in Julian Ephemeris Days "JDE".
-  # Specify the calculation using Horner's Method.
-  mean_phase <- t_mul_t * (
-    g_0_00015437 + t * (t * g_0_00000000073_mpfr - 0.00000015)
-  ) + 29.530588861 * k + 2451550.09766
-
-  # Calculate e, to correct for the (changing) eccentricity of the Earth's
-  # orbit around the Sun.
-  e <- get_eccentric_anomaly(t)
-  e_mul_e <- e * e
-
-  # Calculate the Sun's mean anomaly, in radians.
-  m <- angle_degrees_to_radians(
-    t_mul_t * (-t * 0.00000011 - 0.0000014) + 2.5534 + 29.1053567 * k
-  )
-  m_mul_2 <- g_2_mpfr * m
-
-  # Calculate the Moon's mean anomaly, in radians.
-  m_prime <- angle_degrees_to_radians(
-    t_mul_t * (-t_mul_t * 0.000000058 + t * 0.00001238 + 0.0107582) + 201.5643 +
-      385.81693528 * k
-  )
-  m_prime_mul_2 <- g_2_mpfr * m_prime
-  m_prime_mul_3 <- g_3_mpfr * m_prime
-  m_prime_min_m <- m_prime - m
-  m_prime_pls_m <- m_prime + m
-
-  # Calculate the Moon's argument of latitude, in radians.
-  f_mul_2 <- g_2_mpfr * angle_degrees_to_radians(
-    t_mul_t * (t * (t * 0.000000011 - 0.00000227) - 0.0016118) + 160.7108 +
-      390.67050284 * k
-  )
-
-  # Calculate the longitude of ascending node of the lunar orbit, in radians.
-  omega <- angle_degrees_to_radians(
-    t_mul_t * (t * 0.00000215 + 0.0020672) + g_124_7746_mpfr -
-      g_1_56375588_mpfr * k
-  )
-
-  # Calculate the first set of periodic corrections, in days.
-  if (g_lunar_phase == "full moon" || g_lunar_phase == "new moon") {
-
-    vec_ph_e <- c(g_1_mpfr,
-                  e,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  e,
-                  e,
-                  e_mul_e,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  e,
-                  g_1_mpfr,
-                  e,
-                  e,
-                  e,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr,
-                  g_1_mpfr)
-
-    vec_ph_qrt_sin <- c(m_prime,
-                        m,
-                        m_prime_mul_2,
-                        f_mul_2,
-                        m_prime_min_m,
-                        m_prime_pls_m,
-                        m_mul_2,
-                        m_prime - f_mul_2,
-                        m_prime + f_mul_2,
-                        m_prime_mul_2 + m,
-                        m_prime_mul_3,
-                        m + f_mul_2,
-                        m - f_mul_2,
-                        m_prime_mul_2 - m,
-                        omega,
-                        m_prime + m_mul_2,
-                        m_prime_mul_2 - f_mul_2,
-                        g_3_mpfr * m,
-                        m_prime_pls_m - f_mul_2,
-                        m_prime_mul_2 + f_mul_2,
-                        m_prime_pls_m + f_mul_2,
-                        m_prime_min_m + f_mul_2,
-                        m_prime_min_m - f_mul_2,
-                        m_prime_mul_3 + m,
-                        g_4_mpfr * m_prime)
-
+    #
+    k <- (mpfr(decimal_date(date_target), 128L) - g_2000_mpfr) * c_12_3685_mpfr
     if (g_lunar_phase == "full moon") {
-      # A full moon is being processed.
-      corrections_periodic <- sum(
-        g_vec_ph_full_coeff * vec_ph_e * sin(vec_ph_qrt_sin)
-      )
-    } else {
-      # Assume a new moon is being processed.
-      corrections_periodic <- sum(
-        g_vec_ph_new_coeff * vec_ph_e * sin(vec_ph_qrt_sin)
-      )
-    }
+      k <- g_0_5_mpfr + floor(k)
+      phase_uncertainty <- c_phase_uncertainty_full_moon
+      bool_full_moon <- TRUE
+      bool_new_moon <- FALSE
+      bool_first_quarter <- FALSE
 
-  } else {
-    # Assume a quarter phase is being processed.
+    } else if (g_lunar_phase == "new moon") {
+      k <- floor(g_0_5_mpfr + k)
+      phase_uncertainty <- c_phase_uncertainty_new_moon
+      bool_full_moon <- FALSE
+      bool_new_moon <- TRUE
+      bool_first_quarter <- FALSE
 
-    vec_ph_qrt_e <- c(g_1_mpfr,
-                      e,
-                      e,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      e,
-                      e_mul_e,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      e,
-                      e,
-                      e,
-                      e_mul_e,
-                      e,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr)
+    } else if (g_lunar_phase == "first quarter") {
+      k <- sign(k) * g_0_25_mpfr + floor(g_0_5_mpfr - sign(k) * g_0_25_mpfr + k)
+      phase_uncertainty <- c_phase_uncertainty_first_qrt
+      bool_full_moon <- FALSE
+      bool_new_moon <- FALSE
+      bool_first_quarter <- TRUE
 
-    vec_ph_qrt_sin <- c(m_prime,
-                        m,
-                        m_prime_pls_m,
-                        m_prime_mul_2,
-                        f_mul_2,
-                        m_prime_min_m,
-                        m_mul_2,
-                        m_prime - f_mul_2,
-                        m_prime + f_mul_2,
-                        m_prime_mul_3,
-                        m_prime_mul_2 - m,
-                        m + f_mul_2,
-                        m - f_mul_2,
-                        m_prime + m_mul_2,
-                        m_prime_mul_2 + m,
-                        omega,
-                        m_prime_min_m - f_mul_2,
-                        m_prime_mul_2 + f_mul_2,
-                        m_prime_pls_m + f_mul_2,
-                        m_prime - m_mul_2,
-                        m_prime_pls_m - f_mul_2,
-                        g_3_mpfr * m,
-                        m_prime_mul_2 - f_mul_2,
-                        m_prime_min_m + f_mul_2,
-                        m_prime_mul_3 + m)
-
-    corrections_periodic <- sum(
-      g_vec_ph_qrt_coeff * vec_ph_qrt_e * sin(vec_ph_qrt_sin)
-    )
-
-    # Supplemental quarter phase corrections.
-    vec_ph_sup_e <- c(e,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr,
-                      g_1_mpfr)
-
-    vec_ph_sup_cos <- c(m,
-                        m_prime,
-                        m_prime_min_m,
-                        m_prime_pls_m,
-                        f_mul_2)
-
-    w <- g_0_00306_mpfr + sum(
-      g_vec_ph_sup_coeff * vec_ph_sup_e  * cos(vec_ph_sup_cos)
-    )
-
-    if (g_lunar_phase == "first quarter") {
-      # Apply supplemental first quarter corrections.
-      corrections_periodic <- corrections_periodic + w
+    } else if (g_lunar_phase == "last quarter") {
+      k <- sign(k) * c_0_75_mpfr + floor(g_0_5_mpfr - sign(k) * c_0_75_mpfr + k)
+      phase_uncertainty <- c_phase_uncertainty_last_qrt
+      bool_full_moon <- FALSE
+      bool_new_moon <- FALSE
+      bool_first_quarter <- FALSE
 
     } else {
-      # Apply supplemental last quarter corrections.
-      corrections_periodic <- corrections_periodic - w
+      cat("\nError in function get_lunar_phase_jde...")
+      cat("\nInvalid lunar phase; g_lunar_phase:\n")
+      print(g_lunar_phase)
+      stopifnot(FALSE)
     }
+
+    # Determine the approximate time "t" in Julian centuries from epoch 2000.
+    t <- k / c_1236_85_mpfr
+    t_mul_t <- t * t
+
+    # Determine the mean lunar phase, in Julian Ephemeris Days "JDE".
+    # Specify the calculation using Horner's Method.
+    mean_phase <- t_mul_t * (
+      c_0_00015437 + t * (t * c_0_00000000073_mpfr - c_0_00000015_mpfr)
+    ) + c_29_530588861_mpfr * k + c_2451550_09766_mpfr
+
+    # Calculate e, to correct for the (changing) eccentricity of the Earth's
+    # orbit around the Sun.
+    e <- get_eccentric_anomaly(t) # t will be a mpfr value here.
+    e_mul_e <- e * e
+
+    # Calculate the Sun's mean anomaly, in radians.
+    m <- angle_degrees_to_radians(
+      t_mul_t * (-t * c_0_00000011_mpfr - c_0_0000014_mpfr) + c_2_5534_mpfr +
+        c_29_1053567_mpfr * k
+    )
+    m_mul_2 <- g_2_mpfr * m
+
+    # Calculate the Moon's mean anomaly, in radians.
+    m_prime <- angle_degrees_to_radians(
+      t_mul_t * (
+        -t_mul_t * c_0_000000058_mpfr + t * c_0_00001238_mpfr + c_0_0107582
+      ) + c_201_5643_mpfr + c_385_81693528_mpfr * k
+    )
+    m_prime_mul_2 <- g_2_mpfr * m_prime
+    m_prime_mul_3 <- g_3_mpfr * m_prime
+    m_prime_min_m <- m_prime - m
+    m_prime_pls_m <- m_prime + m
+
+    # Calculate the Moon's argument of latitude, in radians.
+    f_mul_2 <- g_2_mpfr * angle_degrees_to_radians(
+    t_mul_t * (t * (t * c_0_000000011_mpfr - c_0_00000227_mpfr) - c_0_0016118) +
+      c_160_7108_mpfr + c_390_67050284_mpfr * k
+    )
+
+    # Calculate the longitude of ascending node of the lunar orbit, in radians.
+    omega <- angle_degrees_to_radians(
+      t_mul_t * (t * c_0_00000215_mpfr + c_0_0020672) + c_124_7746_mpfr -
+        c_1_56375588_mpfr * k
+    )
+
+    # Calculate periodic corrections, in days.
+    if (isTRUE(bool_full_moon) || isTRUE(bool_new_moon)) {
+
+      # Modify vectors in place.
+      c_vec_ph_e[c_vec_ph_e_mask_e] <<- e
+      c_vec_ph_e[c_vec_ph_e_mask_e_mul_e] <<- e_mul_e
+      #
+      c_vec_ph_sin[1] <<- m_prime
+      c_vec_ph_sin[2] <<- m
+      c_vec_ph_sin[3] <<- m_prime_mul_2
+      c_vec_ph_sin[4] <<- f_mul_2
+      c_vec_ph_sin[5] <<- m_prime_min_m
+      c_vec_ph_sin[6] <<- m_prime_pls_m
+      c_vec_ph_sin[7] <<- m_mul_2
+      c_vec_ph_sin[8] <<- m_prime - f_mul_2
+      c_vec_ph_sin[9] <<- m_prime + f_mul_2
+      c_vec_ph_sin[10] <<- m_prime_mul_2 + m
+      c_vec_ph_sin[11] <<- m_prime_mul_3
+      c_vec_ph_sin[12] <<- m + f_mul_2
+      c_vec_ph_sin[13] <<- m - f_mul_2
+      c_vec_ph_sin[14] <<- m_prime_mul_2 - m
+      c_vec_ph_sin[15] <<- omega
+      c_vec_ph_sin[16] <<- m_prime + m_mul_2
+      c_vec_ph_sin[17] <<- m_prime_mul_2 - f_mul_2
+      c_vec_ph_sin[18] <<- g_3_mpfr * m
+      c_vec_ph_sin[19] <<- m_prime_pls_m - f_mul_2
+      c_vec_ph_sin[20] <<- m_prime_mul_2 + f_mul_2
+      c_vec_ph_sin[21] <<- m_prime_pls_m + f_mul_2
+      c_vec_ph_sin[22] <<- m_prime_min_m + f_mul_2
+      c_vec_ph_sin[23] <<- m_prime_min_m - f_mul_2
+      c_vec_ph_sin[24] <<- m_prime_mul_3 + m
+      c_vec_ph_sin[25] <<- g_4_mpfr * m_prime
+
+      if (isTRUE(bool_full_moon)) {
+        # A full moon is being processed.
+        corrections_periodic <- sum(
+          c_vec_ph_full_coeff * c_vec_ph_e * sin(c_vec_ph_sin)
+        )
+      } else {
+        # Assume a new moon is being processed.
+        corrections_periodic <- sum(
+          c_vec_ph_new_coeff * c_vec_ph_e * sin(c_vec_ph_sin)
+        )
+      }
+
+    } else {
+      # Assume a quarter phase is being processed.
+
+      # Modify the vector in place.
+      c_vec_ph_qrt_e[c_vec_ph_qrt_e_mask_e] <<- e
+      c_vec_ph_qrt_e[c_vec_ph_qrt_e_mask_e_mul_e] <<- e_mul_e
+      #
+      c_vec_ph_qrt_sin[1] <<- m_prime
+      c_vec_ph_qrt_sin[2] <<- m
+      c_vec_ph_qrt_sin[3] <<- m_prime_pls_m
+      c_vec_ph_qrt_sin[4] <<- m_prime_mul_2
+      c_vec_ph_qrt_sin[5] <<- f_mul_2
+      c_vec_ph_qrt_sin[6] <<- m_prime_min_m
+      c_vec_ph_qrt_sin[7] <<- m_mul_2
+      c_vec_ph_qrt_sin[8] <<- m_prime - f_mul_2
+      c_vec_ph_qrt_sin[9] <<- m_prime + f_mul_2
+      c_vec_ph_qrt_sin[10] <<- m_prime_mul_3
+      c_vec_ph_qrt_sin[11] <<- m_prime_mul_2 - m
+      c_vec_ph_qrt_sin[12] <<- m + f_mul_2
+      c_vec_ph_qrt_sin[13] <<- m - f_mul_2
+      c_vec_ph_qrt_sin[14] <<- m_prime + m_mul_2
+      c_vec_ph_qrt_sin[15] <<- m_prime_mul_2 + m
+      c_vec_ph_qrt_sin[16] <<- omega
+      c_vec_ph_qrt_sin[17] <<- m_prime_min_m - f_mul_2
+      c_vec_ph_qrt_sin[18] <<- m_prime_mul_2 + f_mul_2
+      c_vec_ph_qrt_sin[19] <<- m_prime_pls_m + f_mul_2
+      c_vec_ph_qrt_sin[20] <<- m_prime - m_mul_2
+      c_vec_ph_qrt_sin[21] <<- m_prime_pls_m - f_mul_2
+      c_vec_ph_qrt_sin[22] <<- g_3_mpfr * m
+      c_vec_ph_qrt_sin[23] <<- m_prime_mul_2 - f_mul_2
+      c_vec_ph_qrt_sin[24] <<- m_prime_min_m + f_mul_2
+      c_vec_ph_qrt_sin[25] <<- m_prime_mul_3 + m
+
+      corrections_periodic <- sum(
+        c_vec_ph_qrt_coeff * c_vec_ph_qrt_e * sin(c_vec_ph_qrt_sin)
+      )
+
+      # Supplemental quarter phase corrections.
+      # Modify vectors in place.
+      #
+      c_vec_ph_sup_e[c_vec_ph_sup_e_mask_e] <<- e
+      #
+      c_vec_ph_sup_cos[1] <<- m
+      c_vec_ph_sup_cos[2] <<- m_prime
+      c_vec_ph_sup_cos[3] <<- m_prime_min_m
+      c_vec_ph_sup_cos[4] <<- m_prime_pls_m
+      c_vec_ph_sup_cos[5] <<- f_mul_2
+
+      w <- c_0_00306_mpfr + sum(
+        c_vec_ph_sup_coeff * c_vec_ph_sup_e * cos(c_vec_ph_sup_cos)
+      )
+
+      if (isTRUE(bool_first_quarter)) {
+        # Apply supplemental first quarter corrections.
+        corrections_periodic <- corrections_periodic + w
+
+      } else {
+        # Apply supplemental last quarter corrections.
+        corrections_periodic <- corrections_periodic - w
+      }
+
+      # Diagnostic information.
+      if (g_verbosity) {
+        cat("   get_lunar_phase_jde settings (quarter-specific)...\n", sep = "")
+        cat("\n   w:")
+        print(w, digits = 20)
+      }
+    }
+
+    # Calculate additional corrections, based on "planetary arguments" in days.
+    corrections_additional <- sum(
+      c_vec_ph_add_coeff_outer * sin(
+        angle_degrees_to_radians(
+          c_vec_ph_add_addend + c_vec_ph_add_coeff_inner * k -
+            c_vec_ph_add_subtrahend * t_mul_t
+        )
+      )
+    )
 
     # Diagnostic information.
     if (g_verbosity) {
-      cat("   get_lunar_phase_jde settings (quarter-specific)...\n", sep = "")
-      cat("\n   w:")
-      print(w, digits = 20)
+      cat("   get_lunar_phase_jde settings...\n", sep = "")
+      cat("\n   k:")
+      print(k, digits = 20)
+      cat("\n   t:")
+      print(t, digits = 20)
+      cat("\n   e:")
+      print(e, digits = 20)
+      cat("\n   mean_phase: ")
+      print(mean_phase, digits = 20)
+      cat("\n   corrections_periodic: ")
+      print(corrections_periodic, digits = 20)
+      cat("\n   corrections_additional: ")
+      print(corrections_additional, digits = 20)
     }
-  }
 
-  # Calculate additional corrections, based on "planetary arguments" in days.
-  corrections_additional <- sum(
-    g_vec_ph_add_coeff_outer * sin(
-      angle_degrees_to_radians(
-        g_vec_ph_add_addend + g_vec_ph_add_coeff_inner * k -
-          g_vec_ph_add_subtrahend * t_mul_t
-      )
-    )
-  )
-
-  # Diagnostic information.
-  if (g_verbosity) {
-    cat("   get_lunar_phase_jde settings...\n", sep = "")
-    cat("\n   k:")
-    print(k, digits = 20)
-    cat("\n   t:")
-    print(t, digits = 20)
-    cat("\n   e:")
-    print(e, digits = 20)
-    cat("\n   mean_phase: ")
-    print(mean_phase, digits = 20)
-    cat("\n   corrections_periodic: ")
-    print(corrections_periodic, digits = 20)
-    cat("\n   corrections_additional: ")
-    print(corrections_additional, digits = 20)
-  }
-
-  list("value" = corrections_additional + corrections_periodic + mean_phase,
-       "uncertainty" = phase_uncertainty)
+    list("value" = corrections_additional + corrections_periodic + mean_phase,
+         "uncertainty" = phase_uncertainty)
+    }
 }
-
-
-is_valid_date <- function(date_target) {
-
-  # This program is designed to process 21st century dates.
-  #   I.e. 01-Jan-2001 to 31-Dec-2100.
-  #
-  # Input:
-  #   date_target    Date should be a UTC time.
-  #
-  # Output:
-  #   A Boolean indicating if the date is a 21st century date.
-
-  (date_target >= as.POSIXct(
-    "01-01-2001 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )) & (date_target < as.POSIXct(
-    "01-01-2101 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  ))
-}
-
-
-make_get_del_t_pre_2025 <- function() {
-
-  # Closure constants.
-  c_0_005589_mpfr <- mpfr("0.005589", 128L)
-  c_0_32217_mpfr <- mpfr("0.32217", 128L)
-  c_62_92_mpfr <- mpfr("62.92", 128L)
-
-  # Body of: get_del_t_pre_2025.
-  function(t) {
-
-    #   Calculate "delta t" for years before 2025.
-    # Delta t is the difference in the Earth's rotation period and the length
-    # of an ideal day measured by International Atomic Time (86,400 seconds).
-    #
-    # Input
-    #   t  The value of a target decimal year - 2000.
-    #      Assumed to a mpfr value.
-
-    t * (c_0_005589_mpfr * t + c_0_32217_mpfr) + c_62_92_mpfr
-  }
-}
-
 
 make_get_utc <- function() {
-
-  # Assumed global constants.
-  #   g_0_0032_mpfr, g_11_0852_mpfr, g_2000_mpfr, g_9369_66_mpfr.
 
   # Closure constants.
   c_365_day_scaling <- 1 / mpfr("31536000", 128L) # 31536000 seconds = 365 days.
@@ -1640,40 +1830,35 @@ make_get_utc <- function() {
       stopifnot(FALSE)
     }
 
-    # Estimate value.
-    # Remember,
-    #   0 = UTC (decimal year) +
-    #         (ay^2 + by + c) (seconds) -
-    #         date_target (decimal year).
-    #
     dt_decimal <- mpfr(decimal_date(date_target), 128L)
     small_diff <- mpfr(decimal_date(date_target - c_5_minutes), 128L)
 
-    # Determine how many seconds were in the UTC year, get a inverse scaling
-    # factor. N.B. Remember, del T is a function of the UTC year (not DT year).
+    # Determine how many seconds were in the UTC year, and get a inverse scaling
+    # factor.
+    #
+    # N.B. Remember, del T is a function of the UTC year (not DT year).
+    # N.B. Also,
+    #   Dynamical Time (decimal year) = UTC (decimal year) +
+    #                                     (ay^2 + by + c) (seconds)
+    #
     if (is_utc_leap_year(date_target, dt_decimal)) {
       scaling <- c_366_day_scaling
     } else {
       scaling <- c_365_day_scaling
     }
 
-################################################################################
     # Before 2050...
     if (date_target < c_threshold_2050) {
       f1 <- function(x) {
-        # N.B. Input "x" is always already a mprf by here.
-        t <- x - g_2000_mpfr
-        x + scaling * get_del_t_pre_2025(t) - dt_decimal
+        # N.B. Input "x" is always already a mpfr value by here.
+        x + scaling * get_del_t_pre_2025(x) - dt_decimal
       }
 
     } else { # After 2050...
       f1 <- function(x) {
-        x + scaling * (
-          x * (g_0_0032_mpfr * x - g_11_0852_mpfr) + g_9369_66_mpfr
-        ) - dt_decimal
+        x + scaling * get_del_t_post_2025(x) - dt_decimal
       }
     }
-    # CONSOLIDATE THE FUNCTIONS ABOVE WITH VERSIONS IN OTHER FUNCTIONS!!!!!!!!!
 
     # Return the UTC value as a date-time.
     #   N.B. By default unirootR warns if the root finding calculation fails to
@@ -1697,7 +1882,6 @@ make_get_utc <- function() {
     )
   }
 }
-
 
 make_is_utc_leap_year <- function() {
 
@@ -1737,14 +1921,13 @@ make_is_utc_leap_year <- function() {
     # 23:59:59.999 (UTC).
     #
     # Input:
-    #   date_target  Date should be a UTC time.
+    #   date_target          Date should be a UTC time.
+    #   date_target_decimal  Decimal equivalent of date_target, as a mpfr value.
     #
     #     N.B. An input date equivalent to a 21st century UTC date is assumed.
     #     N.B. date_target should be >= 01-Jan-2021 UTC.
     #          I.e. >= 01-Jan-2021 00:01:12.150 Dynamical Time.
     #          I.e. >= 2021.000002287871666339920000000000000000 DT.
-    #
-    #   date_target_decimal  Decimal equivalent of date_target, as a mprf value.
     #
     # Output:
     #   A Boolean indicating if the Dynamical Time falls in a UTC leap year.
@@ -1776,7 +1959,6 @@ make_is_utc_leap_year <- function() {
     leap_year(year_target)
   }
 }
-
 
 make_time_dynam_to_jde <- function() {
 
@@ -1830,7 +2012,6 @@ make_time_dynam_to_jde <- function() {
       floor(g_365_25_mpfr * (yr + g_4716_mpfr))
   }
 }
-
 
 make_time_dynam_to_universal <- function() {
 
@@ -2125,7 +2306,6 @@ make_time_dynam_to_universal <- function() {
   }
 }
 
-
 make_time_jde_to_dynam <- function() {
 
   # Assumed global constants.
@@ -2215,7 +2395,6 @@ make_time_jde_to_dynam <- function() {
     ) + ddays(day - day_trunc)
   }
 }
-
 
 make_time_universal_to_dynam <- function() {
 
@@ -2471,8 +2650,13 @@ make_time_universal_to_dynam <- function() {
 }
 
 # Implement closures.
+get_del_t <- make_get_del_t()
+get_del_t_post_2025 <- make_get_del_t_post_2025()
 get_del_t_pre_2025 <- make_get_del_t_pre_2025()
-#
+get_eccentric_anomaly <- make_get_eccentric_anomaly()
+get_lunar_apsis_jde <- make_get_lunar_apsis_jde()
+get_lunar_distance <- make_get_lunar_distance()
+get_lunar_phase_jde <- make_get_lunar_phase_jde()
 get_utc <- make_get_utc()
 is_utc_leap_year <- make_is_utc_leap_year()
 time_dynamical_to_jde <- make_time_dynam_to_jde()
@@ -2481,8 +2665,7 @@ time_jde_to_dynamical <- make_time_jde_to_dynam()
 time_universal_to_dynamical <- make_time_universal_to_dynam()
 ```
 
-```{r testing_precision}
-
+```{r, "testing-precision"}
 # Precision Testing
 # -----------------
 #
@@ -2526,8 +2709,7 @@ difference <- abs(lunar_distance_a$value - lunar_distance_b$value) *
 cat("\U2248", formatMpfr(difference, 1), " mm\n", sep = "")
 ```
 
-```{r testing_Meeus_examples}
-
+```{r, "testing-Meeus-examples"}
 # Testing
 # -------
 
@@ -2726,8 +2908,7 @@ cat(
 ######
 ```
 
-```{r testing_grey_literature}
-
+```{r, "testing-grey-literature"}
 # Testing against grey literature examples.
 # -----------------------------------------
 #
@@ -2890,8 +3071,7 @@ for (i in 2:length(vec_dates_fourmilab)) {
 }
 ```
 
-```{r example_lunar_data_at_given_date}
-
+```{r, "example-lunar-data-at-given-date"}
 # Example 1
 # ---------
 #
@@ -3073,7 +3253,7 @@ cat(
 )
 ```
 
-```{r example_graph_data_generation}
+```{r, "example-graph-data-generation"}
 # Example 2a
 # ----------
 #
@@ -3256,7 +3436,7 @@ cat("\nData prepared.")
 
 ```
 
-```{r example_graph_poster_style}
+```{r, "example-graph-poster-style"}
 # Example 2b
 # ----------
 #
@@ -3334,7 +3514,7 @@ ggplot2::ggsave(
 )
 ```
 
-```{r example_graph_paper_style}
+```{r, "example-graph-paper-style"}
 # Example 2c
 # ----------
 #
@@ -3398,7 +3578,7 @@ ggplot2::ggsave(
 )
 ```
 
-```{r example_supermoons_one_century}
+```{r, "example-supermoons-one-century"}
 # Example 3
 # ---------
 #
