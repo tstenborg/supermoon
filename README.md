@@ -176,7 +176,7 @@ The file `supermoon.Rmd` should be run from RStudio.
 ## Acknowledgements
 
 This repository used Gemini 3.6 Flash [[5](#references)] as an assistive tool to
-help resolve Fortran-R integration issues.
+help resolve Fortran-R integration issues and provide performance tuning tips.
 
 ## References
 
