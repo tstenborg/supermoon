@@ -46,47 +46,7 @@ g_lunar_phase <- "full moon"
 
 # Set general purpose numeric global variables.
 g_max_indent <- 27
-
-g_0_mpfr <- mpfr("0", 128L)
-g_0_25_mpfr <- mpfr("0.25", 128L)
-g_0_5_mpfr <- mpfr("0.5", 128L)
-g_1_mpfr <- mpfr("1", 128L)
 g_2_mpfr <- mpfr("2", 128L)
-g_3_mpfr <- mpfr("3", 128L)
-g_30_6001_mpfr <- mpfr("30.6001", 128L)
-g_365_25_mpfr <- mpfr("365.25", 128L)
-g_4716_mpfr <- mpfr("4716", 128L)
-
-# Set durations.
-g_zero_seconds <- lubridate::dseconds(g_0_mpfr)
-g_42_18_seconds <- lubridate::dseconds(mpfr("42.18", 128L))
-g_43_18_seconds <- lubridate::dseconds(mpfr("43.18", 128L))
-g_44_18_seconds <- lubridate::dseconds(mpfr("44.18", 128L))
-g_45_18_seconds <- lubridate::dseconds(mpfr("45.18", 128L))
-g_46_18_seconds <- lubridate::dseconds(mpfr("46.18", 128L))
-g_47_18_seconds <- lubridate::dseconds(mpfr("47.18", 128L))
-g_48_18_seconds <- lubridate::dseconds(mpfr("48.18", 128L))
-g_49_18_seconds <- lubridate::dseconds(mpfr("49.18", 128L))
-g_50_18_seconds <- lubridate::dseconds(mpfr("50.18", 128L))
-g_51_18_seconds <- lubridate::dseconds(mpfr("51.18", 128L))
-g_52_18_seconds <- lubridate::dseconds(mpfr("52.18", 128L))
-g_53_18_seconds <- lubridate::dseconds(mpfr("53.18", 128L))
-g_54_18_seconds <- lubridate::dseconds(mpfr("54.18", 128L))
-g_55_18_seconds <- lubridate::dseconds(mpfr("55.18", 128L))
-g_56_18_seconds <- lubridate::dseconds(mpfr("56.18", 128L))
-g_57_18_seconds <- lubridate::dseconds(mpfr("57.18", 128L))
-g_58_18_seconds <- lubridate::dseconds(mpfr("58.18", 128L))
-g_59_18_seconds <- lubridate::dseconds(mpfr("59.18", 128L))
-g_60_18_seconds <- lubridate::dseconds(mpfr("60.18", 128L))
-g_61_18_seconds <- lubridate::dseconds(mpfr("61.18", 128L))
-g_62_18_seconds <- lubridate::dseconds(mpfr("62.18", 128L))
-g_63_18_seconds <- lubridate::dseconds(mpfr("63.18", 128L))
-g_64_18_seconds <- lubridate::dseconds(mpfr("64.18", 128L))
-g_65_18_seconds <- lubridate::dseconds(mpfr("65.18", 128L))
-g_66_18_seconds <- lubridate::dseconds(mpfr("66.18", 128L))
-g_67_18_seconds <- lubridate::dseconds(mpfr("67.18", 128L))
-g_68_18_seconds <- lubridate::dseconds(mpfr("68.18", 128L))
-g_69_18_seconds <- lubridate::dseconds(mpfr("69.18", 128L))
 
 # End global variables. #######################################################
 
@@ -326,7 +286,7 @@ make_get_del_t <- function() {
   c_threshold_get_del_t <- mpfr(
     lubridate::decimal_date(
       as.POSIXct(
-        "01-01-2021 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+        "01-01-2026 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
       ) - lubridate::dmilliseconds(mpfr("900", 128L))
     ), 128L
   )
@@ -355,13 +315,13 @@ make_get_del_t <- function() {
     #
     date_target <- mpfr(lubridate::decimal_date(date_target), 128L)
 
-    # Before 2021...
+    # Before 2026...
     if (date_target < c_threshold_get_del_t) {
-      # As known del T values exist until 31-Dec-2020 23:59:59, del T shouldn't
+      # As known del T values exist until 31-Dec-2025 23:59:59, del T shouldn't
       # be estimated on or prior to that.
       # Allow a 900 millisecond buffer for processing the UT1-UTC uncertainty,
       # which is always <= 0.9 s.
-      # So, c_threshold_get_del_t is (01-01-2021 00:00:00) - 0.9 s.
+      # So, c_threshold_get_del_t is (01-01-2026 00:00:00) - 0.9 s.
 
       cat("\nError in function get_del_t...")
       cat("\nInvalid date processing; date_target:\n")
@@ -371,10 +331,10 @@ make_get_del_t <- function() {
 
     # Before 2050...
     if (date_target < c_2050_mpfr) {
-      del_t <- get_del_t_pre_2025(date_target)
+      del_t <- get_del_t_pre_2050(date_target)
 
     } else { # After 2050...
-      del_t <- get_del_t_post_2025(date_target)
+      del_t <- get_del_t_post_2050(date_target)
     }
 
     # N.B. Here uncertainty is in seconds; algorithm's intrinsic uncertainty.
@@ -387,17 +347,17 @@ make_get_del_t <- function() {
   }
 }
 
-make_get_del_t_post_2025 <- function() {
+make_get_del_t_post_2050 <- function() {
 
   # Closure constants.
   c_0_0032_mpfr <- mpfr("0.0032", 128L)
   c_11_0852_mpfr <- mpfr("11.0852", 128L)
   c_9369_66_mpfr <- mpfr("9369.66", 128L)
 
-  # Body of: get_del_t_post_2025.
+  # Body of: get_del_t_post_2050.
   function(t_mpfr) {
 
-    # Calculate "delta t" for years including and after 2025.
+    # Calculate "delta t" for years including and after 2050.
     #
     # Delta t is the difference in the Earth's rotation period and the length
     # of an ideal day measured by International Atomic Time (86,400 seconds).
@@ -415,7 +375,7 @@ make_get_del_t_post_2025 <- function() {
   }
 }
 
-make_get_del_t_pre_2025 <- function() {
+make_get_del_t_pre_2050 <- function() {
 
   # Closure constants.
   c_0_005589_mpfr <- mpfr("0.005589", 128L)
@@ -423,10 +383,10 @@ make_get_del_t_pre_2025 <- function() {
   c_62_92_mpfr <- mpfr("62.92", 128L)
   c_2000_mpfr <- mpfr("2000", 128L)
 
-  # Body of: get_del_t_pre_2025.
+  # Body of: get_del_t_pre_2050.
   function(t_mpfr) {
 
-    # Calculate "delta t" for years before 2025.
+    # Calculate "delta t" for years before 2050.
     #
     # Delta t is the difference in the Earth's rotation period and the length
     # of an ideal day measured by International Atomic Time (86,400 seconds).
@@ -762,6 +722,10 @@ make_get_lunar_apsis_jde <- function() {
     )
   }
 }
+
+# Mid-chunk pause.
+# Add a two-second pause to ameliorate RStudio input/output and RAM spikes.
+Sys.sleep(2)
 
 make_get_lunar_distance <- function() {
 
@@ -1415,6 +1379,10 @@ make_get_lunar_phase_jde <- function() {
   }
 }
 
+# Mid-chunk pause.
+# Add a two-second pause to ameliorate RStudio input/output and RAM spikes.
+Sys.sleep(2)
+
 make_get_utc <- function() {
 
   # Closure constants.
@@ -1427,12 +1395,12 @@ make_get_utc <- function() {
   c_0_5_mpfr <- mpfr("0.5", 128L)
   c_5_minutes <- lubridate::dminutes(mpfr("5", 128L))
 
-  # N.B. Assume 01-Jan-2021 00:00:00.000 UTC = 01-01-2021 00:01:12.150 DT.
-  #      ~2021.000002287871666339920000000000000000 DT.
-  # N.B. Technically, here, 01-Jan-2021 00:00:00.000 UTC =
-  #      01-Jan-2021 00:01:12.150 +- 00:00:03.261 Dynamical Time.
-  c_threshold_2021 <- as.POSIXct(
-    "01-01-2021 00:01:12.150", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+  # N.B. Assume 01-Jan-2026 00:00:00.000 UTC = 01-01-2026 00:01:12.150 DT.
+  #      ~2026.000002287871666339920000000000000000 DT.
+  # N.B. Technically, here, 01-Jan-2026 00:00:00.000 UTC =
+  #      01-Jan-2026 00:01:12.150 +- 00:00:03.261 Dynamical Time.
+  c_threshold_2026 <- as.POSIXct(
+    "01-01-2026 00:01:12.150", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
   )
   # Assume 01-Jan-2050 00:00:00.000 UTC = 01-Jan-2050 00:01:33.000 DT.
   c_threshold_2050 <- as.POSIXct(
@@ -1452,17 +1420,17 @@ make_get_utc <- function() {
     #                  century.
 
     # Ensure a valid date has been entered.
-    # Known del T values exist until 31-Dec-2020 23:59:59.
+    # Known del T values exist until 31-Dec-2025 23:59:59.
     # UTC should be specified exactly for such dates, not calculated here.
     #
-    # Before 2021...
-    if (date_target < c_threshold_2021) {
+    # Before 2026...
+    if (date_target < c_threshold_2026) {
       cat("\nError in function get_utc...")
       cat(
         "\nInput date:  ", format(date_target, "%d-%b-%Y %H:%M:%OS"),
         " (assumed Dynamical Time)"
       )
-      cat("\nNeed date >= 01-01-2021 00:01:12.150 Dynamical Time", sep = "")
+      cat("\nNeed date >= 01-01-2026 00:01:12.150 Dynamical Time", sep = "")
       stopifnot(FALSE)
     }
 
@@ -1487,12 +1455,12 @@ make_get_utc <- function() {
     if (date_target < c_threshold_2050) {
       f1 <- function(x) {
         # N.B. Input "x" is always already a mpfr value by here.
-        x + scaling * get_del_t_pre_2025(x) - dt_decimal
+        x + scaling * get_del_t_pre_2050(x) - dt_decimal
       }
 
     } else { # After 2050...
       f1 <- function(x) {
-        x + scaling * get_del_t_post_2025(x) - dt_decimal
+        x + scaling * get_del_t_post_2050(x) - dt_decimal
       }
     }
 
@@ -1520,7 +1488,7 @@ make_get_utc <- function() {
         lubridate::date_decimal(
           asNumeric(utc$root + utc$estim.prec * c_0_5_mpfr), tz = "UTC"
         ),
-        utc_decimal, tz = "UTC", units = c("auto")
+        utc_decimal, tz = "UTC", units = "auto"
       )
     )
   }
@@ -1531,36 +1499,35 @@ make_is_utc_leap_year <- function() {
   # Closure constants.
 
   # Leap year check transition constants.
-  c_vec_leap_year_transition <- c(
-    mpfr("2025.000002361344968448980000000000000003", 128L),
-    mpfr("2029.000002440489652144610000000000000000", 128L),
-    mpfr("2033.000002525305490053139999999999999999", 128L),
-    mpfr("2037.000002615792482174580000000000000000", 128L),
-    mpfr("2041.000002711950855882609999999999999999", 128L),
-    mpfr("2045.000002813780383803530000000000000003", 128L),
-    mpfr("2049.000002921281065937360000000000000003", 128L),
-    mpfr("2053.000003143493358948040000000000000003", 128L),
-    mpfr("2057.000003405644292797659999999999999996", 128L),
-    mpfr("2061.000003671042577479970000000000000000", 128L),
-    mpfr("2065.000003939687758247599999999999999994", 128L),
-    mpfr("2069.000004211580289847920000000000000000", 128L),
-    mpfr("2073.000004486719717533559999999999999995", 128L),
-    mpfr("2077.000004765106496051890000000000000002", 128L),
-    mpfr("2081.000005046740170655539999999999999999", 128L),
-    mpfr("2085.000005331621196091869999999999999999", 128L),
-    mpfr("2089.000005619748662866189999999999999998", 128L),
-    mpfr("2093.000005911123935220530000000000000000", 128L),
-    mpfr("2097.000006205745648912850000000000000004", 128L)
-  )
+  c_vec_leap_year_transition <- mpfr(c(
+    "2029.000002440489652144610000000000000000",
+    "2033.000002525305490053139999999999999999",
+    "2037.000002615792482174580000000000000000",
+    "2041.000002711950855882609999999999999999",
+    "2045.000002813780383803530000000000000003",
+    "2049.000002921281065937360000000000000003",
+    "2053.000003143493358948040000000000000003",
+    "2057.000003405644292797659999999999999996",
+    "2061.000003671042577479970000000000000000",
+    "2065.000003939687758247599999999999999994",
+    "2069.000004211580289847920000000000000000",
+    "2073.000004486719717533559999999999999995",
+    "2077.000004765106496051890000000000000002",
+    "2081.000005046740170655539999999999999999",
+    "2085.000005331621196091869999999999999999",
+    "2089.000005619748662866189999999999999998",
+    "2093.000005911123935220530000000000000000",
+    "2097.000006205745648912850000000000000004"
+  ), 128L)
 
   # Leap year check sequence.
-  c_seq_leap_year_check <- seq(2025, 2097, by = 4)
+  c_seq_leap_year_check <- seq(2029, 2097, by = 4)
 
   # Body of: is_utc_leap_year.
   function(date_target, date_target_decimal_mpfr) {
 
     # Test if a Dynamical Time falls in a UTC leap year.
-    # This information is used to convert DT to UTC date-times > 31-Dec-2020
+    # This information is used to convert DT to UTC date-times > 31-Dec-2025
     # 23:59:59.999 (UTC).
     #
     # Input:
@@ -1568,9 +1535,9 @@ make_is_utc_leap_year <- function() {
     #   date_target_decimal  Decimal equivalent of date_target, as a mpfr value.
     #
     #     N.B. An input date equivalent to a 21st century UTC date is assumed.
-    #     N.B. date_target should be >= 01-Jan-2021 UTC.
-    #          I.e. >= 01-Jan-2021 00:01:12.150 Dynamical Time.
-    #          I.e. >= 2021.000002287871666339920000000000000000 DT.
+    #     N.B. date_target should be >= 01-Jan-2026 UTC.
+    #          I.e. >= 01-Jan-2026 00:01:12.150 Dynamical Time.
+    #          I.e. >= 2026.000002287871666339920000000000000000 DT.
     #
     # Output:
     #   A Boolean indicating if the Dynamical Time falls in a UTC leap year.
@@ -1605,15 +1572,20 @@ make_is_utc_leap_year <- function() {
 
 make_time_dynam_to_jde <- function() {
 
-  # Assumed global constants.
-  #   g_0_25_mpfr, g_1_mpfr, g_2_mpfr, g_3_mpfr, g_30_6001_mpfr, g_365_25_mpfr,
-  #   g_4716_mpfr.
-
   # Closure constants.
-  c_0_01_mpfr <- mpfr("0.01", 128L)
-  c_12_mpfr <- mpfr("12", 128L)
-  c_1524_5_mpfr <- mpfr("1524.5", 128L)
-  c_1_day <- lubridate::ddays(g_1_mpfr)
+  c_0_01_mpfr    <- mpfr("0.01", 128L)
+  c_0_25_mpfr    <- mpfr("0.25", 128L)
+  c_1_mpfr       <- mpfr("1", 128L)
+  c_2_mpfr       <- mpfr("2", 128L)
+  c_3_mpfr       <- mpfr("3", 128L)
+  c_12_mpfr      <- mpfr("12", 128L)
+  c_24_mpfr      <- mpfr("24", 128L)
+  c_30_6001_mpfr <- mpfr("30.6001", 128L)
+  c_365_25_mpfr  <- mpfr("365.25", 128L)
+  c_1440_mpfr    <- mpfr("1440", 128L)
+  c_1524_5_mpfr  <- mpfr("1524.5", 128L)
+  c_4716_mpfr    <- mpfr("4716", 128L)
+  c_86400_mpfr   <- mpfr("86400", 128L)
 
   # Body of: time_dynamical_to_jde.
   function(date_target) {
@@ -1625,135 +1597,87 @@ make_time_dynam_to_jde <- function() {
     # Input:
     #   date_target    A date-time, in Dynamical Time format.
 
-    yr <- lubridate::year(date_target)
-    mn <- lubridate::month(date_target)
-    dy <- lubridate::day(date_target)
-
-    date_target_fractional <- as.POSIXct(
-      paste0(
-        sprintf("%02d", as.integer(dy)), "-",
-        sprintf("%02d", as.integer(mn)), "-",
-        as.integer(yr), " 00:00:00"
-      ), format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-    )
-
-    yr <- mpfr(yr, 128L)
-    mn <- mpfr(mn, 128L)
-    dy <- mpfr(dy, 128L)
-
-    # Add the date's fractional part to dy.
-    dy <- dy + (date_target - date_target_fractional) / c_1_day
-
-    if (mn < g_3_mpfr) {
-      yr <- yr - g_1_mpfr
+    yr <- mpfr(lubridate::year(date_target), 128L)
+    mn <- mpfr(lubridate::month(date_target), 128L)
+    if (mn < c_3_mpfr) {
+      yr <- yr - c_1_mpfr
       mn <- mn + c_12_mpfr
     }
 
-    a <- floor(yr * c_0_01_mpfr)
-    b <- g_2_mpfr + floor(a * g_0_25_mpfr) - a
+    # Get dy as a decimal day.
+    #
+    #   Minutes per day = 1440.
+    #   Seconds per day = 86400.
+    #   Sum elements from smallest to largest to reduce roundoff.
+    #
+    dy <- mpfr(lubridate::second(date_target), 128L) / c_86400_mpfr + # Seconds.
+      mpfr(lubridate::minute(date_target), 128L) / c_1440_mpfr +      # Minutes.
+      mpfr(lubridate::hour(date_target), 128L) / c_24_mpfr +          # Hours.
+      mpfr(lubridate::day(date_target), 128L)                         # Days.
 
-    b + dy + floor(g_30_6001_mpfr * (mn + g_1_mpfr)) - c_1524_5_mpfr +
-      floor(g_365_25_mpfr * (yr + g_4716_mpfr))
+    a <- floor(yr * c_0_01_mpfr)
+    b <- c_2_mpfr + floor(a * c_0_25_mpfr) - a
+
+    b + dy + floor(c_30_6001_mpfr * (mn + c_1_mpfr)) - c_1524_5_mpfr +
+      floor(c_365_25_mpfr * (yr + c_4716_mpfr))
   }
 }
 
 make_time_dynam_to_universal <- function() {
 
-  # Assumed global constants.
-  #   g_zero_seconds,
-  #   g_69_18_seconds, g_68_18_seconds, g_67_18_seconds, g_66_18_seconds,
-  #   g_65_18_seconds, g_64_18_seconds, g_63_18_seconds, g_62_18_seconds,
-  #   g_61_18_seconds, g_60_18_seconds, g_59_18_seconds, g_58_18_seconds,
-  #   g_57_18_seconds, g_56_18_seconds, g_55_18_seconds, g_54_18_seconds,
-  #   g_53_18_seconds, g_52_18_seconds, g_51_18_seconds, g_50_18_seconds,
-  #   g_49_18_seconds, g_48_18_seconds, g_47_18_seconds, g_46_18_seconds,
-  #   g_45_18_seconds, g_44_18_seconds, g_43_18_seconds, g_42_18_seconds.
-
   # Closure constants.
-  c_2021_start_threshold <- as.POSIXct(
-    "01-01-2021 00:01:09.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+
+  c_zero_seconds  <- lubridate::dseconds(mpfr("0", 128L))
+
+  c_offsets <- c(
+    lubridate::dseconds(mpfr("43.18", 128L)),  #  1 (42.18 + 1 sec)
+    lubridate::dseconds(mpfr("44.18", 128L)),  #  2 (42.18 + 2 sec)
+    lubridate::dseconds(mpfr("45.18", 128L)),  #  3 (42.18 + 3 sec)
+    lubridate::dseconds(mpfr("46.18", 128L)),  #  4 (42.18 + 4 sec)
+    lubridate::dseconds(mpfr("47.18", 128L)),  #  5 (42.18 + 5 sec)
+    lubridate::dseconds(mpfr("48.18", 128L)),  #  6 (42.18 + 6 sec)
+    lubridate::dseconds(mpfr("49.18", 128L)),  #  7 (42.18 + 7 sec)
+    lubridate::dseconds(mpfr("50.18", 128L)),  #  8 (42.18 + 8 sec)
+    lubridate::dseconds(mpfr("51.18", 128L)),  #  9 (42.18 + 9 sec)
+    lubridate::dseconds(mpfr("52.18", 128L)),  # 10 (42.18 + 10 sec)
+    lubridate::dseconds(mpfr("53.18", 128L)),  # 11 (42.18 + 11 sec)
+    lubridate::dseconds(mpfr("54.18", 128L)),  # 12 (42.18 + 12 sec)
+    lubridate::dseconds(mpfr("55.18", 128L)),  # 13 (42.18 + 13 sec)
+    lubridate::dseconds(mpfr("56.18", 128L)),  # 14 (42.18 + 14 sec)
+    lubridate::dseconds(mpfr("57.18", 128L)),  # 15 (42.18 + 15 sec)
+    lubridate::dseconds(mpfr("58.18", 128L)),  # 16 (42.18 + 16 sec)
+    lubridate::dseconds(mpfr("59.18", 128L)),  # 17 (42.18 + 17 sec)
+    lubridate::dseconds(mpfr("60.18", 128L)),  # 18 (42.18 + 18 sec)
+    lubridate::dseconds(mpfr("61.18", 128L)),  # 19 (42.18 + 19 sec)
+    lubridate::dseconds(mpfr("62.18", 128L)),  # 20 (42.18 + 20 sec)
+    lubridate::dseconds(mpfr("63.18", 128L)),  # 21 (42.18 + 21 sec)
+    lubridate::dseconds(mpfr("64.18", 128L)),  # 22 (42.18 + 22 sec)
+    lubridate::dseconds(mpfr("65.18", 128L)),  # 23 (42.18 + 23 sec)
+    lubridate::dseconds(mpfr("66.18", 128L)),  # 24 (42.18 + 24 sec)
+    lubridate::dseconds(mpfr("67.18", 128L)),  # 25 (42.18 + 25 sec)
+    lubridate::dseconds(mpfr("68.18", 128L)),  # 26 (42.18 + 26 sec)
+    lubridate::dseconds(mpfr("69.18", 128L)),  # 27 (42.18 + 27 sec)
+    lubridate::dseconds(mpfr("42.18", 128L))   # 28 Put the default value last.
   )
-  c_2017_start_threshold <- as.POSIXct(
-    "01-01-2017 00:01:08.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2015_mid_threshold <- as.POSIXct(
-    "01-07-2015 00:01:07.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2012_mid_threshold <- as.POSIXct(
-    "01-07-2012 00:01:06.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2009_start_threshold <- as.POSIXct(
-    "01-01-2009 00:01:05.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2006_start_threshold <- as.POSIXct(
-    "01-01-2006 00:01:04.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1999_start_threshold <- as.POSIXct(
-    "01-01-1999 00:01:03.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1997_mid_threshold <- as.POSIXct(
-    "01-07-1997 00:01:02.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1996_start_threshold <- as.POSIXct(
-    "01-01-1996 00:01:01.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1994_mid_threshold <- as.POSIXct(
-    "01-07-1994 00:01:00.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1993_mid_threshold <- as.POSIXct(
-    "01-07-1993 00:00:59.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1992_mid_threshold <- as.POSIXct(
-    "01-07-1992 00:00:58.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1991_start_threshold <- as.POSIXct(
-    "01-01-1991 00:00:57.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1990_start_threshold <- as.POSIXct(
-    "01-01-1990 00:00:56.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1988_start_threshold <- as.POSIXct(
-    "01-01-1988 00:00:55.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1985_mid_threshold <- as.POSIXct(
-    "01-07-1985 00:00:54.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1983_mid_threshold <- as.POSIXct(
-    "01-07-1983 00:00:53.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1982_mid_threshold <- as.POSIXct(
-    "01-07-1982 00:00:52.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1981_mid_threshold <- as.POSIXct(
-    "01-07-1981 00:00:51.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1980_start_threshold <- as.POSIXct(
-    "01-01-1980 00:00:50.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1979_start_threshold <- as.POSIXct(
-    "01-01-1979 00:00:49.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1978_start_threshold <- as.POSIXct(
-    "01-01-1978 00:00:48.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1977_start_threshold <- as.POSIXct(
-    "01-01-1977 00:00:47.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1976_start_threshold <- as.POSIXct(
-    "01-01-1976 00:00:46.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1975_start_threshold <- as.POSIXct(
-    "01-01-1975 00:00:45.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1974_start_threshold <- as.POSIXct(
-    "01-01-1974 00:00:44.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1973_start_threshold <- as.POSIXct(
-    "01-01-1973 00:00:43.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1972_mid_threshold <- as.POSIXct(
-    "01-07-1972 00:00:42.18", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
+
+  # Thresholds correspond to the (irregular) addition of leap seconds, as
+  # managed by the International Earth Rotation and Reference Systems Service.
+  c_thresholds <- as.POSIXct(c(
+    "01-07-1972 00:00:42.18", "01-01-1973 00:00:43.18",  #  1,  2
+    "01-01-1974 00:00:44.18", "01-01-1975 00:00:45.18",  #  3,  4
+    "01-01-1976 00:00:46.18", "01-01-1977 00:00:47.18",  #  5,  6
+    "01-01-1978 00:00:48.18", "01-01-1979 00:00:49.18",  #  7,  8
+    "01-01-1980 00:00:50.18", "01-07-1981 00:00:51.18",  #  9, 10
+    "01-07-1982 00:00:52.18", "01-07-1983 00:00:53.18",  # 11, 12
+    "01-07-1985 00:00:54.18", "01-01-1988 00:00:55.18",  # 13, 14
+    "01-01-1990 00:00:56.18", "01-01-1991 00:00:57.18",  # 15, 16
+    "01-07-1992 00:00:58.18", "01-07-1993 00:00:59.18",  # 17, 18
+    "01-07-1994 00:01:00.18", "01-01-1996 00:01:01.18",  # 19, 20
+    "01-07-1997 00:01:02.18", "01-01-1999 00:01:03.18",  # 21, 22
+    "01-01-2006 00:01:04.18", "01-01-2009 00:01:05.18",  # 23, 24
+    "01-07-2012 00:01:06.18", "01-07-2015 00:01:07.18",  # 25, 26
+    "01-01-2017 00:01:08.18", "01-01-2026 00:01:09.18"   # 27, 28
+  ), format = "%d-%m-%Y %H:%M:%OS",  tz = "UTC")
 
   # Body of: time_dynamical_to_universal.
   function(date_target)   {
@@ -1774,197 +1698,47 @@ make_time_dynam_to_universal <- function() {
     # time zones. If the UTC label was omitted, they would be valid dynamical
     # time values.
 
-    if (date_target >= c_2021_start_threshold) {
+    if (date_target >= c_thresholds[28]) {
       # Get UTC via algorithmic estimation.
       #   N.B. get_utc returns a date-time.
       #        get_utc returns uncertainty as a time difference.
-      get_utc(date_target)
-
-    } else if (date_target >= c_2017_start_threshold) {
-      # Offset = 42.18 + 27 seconds.
-      list(
-        "value" = date_target - g_69_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_2015_mid_threshold) {
-      # Offset = 42.18 + 26 seconds.
-      list(
-        "value" = date_target - g_68_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_2012_mid_threshold) {
-      # Offset = 42.18 + 25 seconds.
-      list(
-        "value" = date_target - g_67_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_2009_start_threshold) {
-      # Offset = 42.18 + 24 seconds.
-      list(
-        "value" = date_target - g_66_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_2006_start_threshold) {
-      # Offset = 42.18 + 23 seconds.
-      list(
-        "value" = date_target - g_65_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1999_start_threshold) {
-      # Offset = 42.18 + 22 seconds.
-      list(
-        "value" = date_target - g_64_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1997_mid_threshold) {
-      # Offset = 42.18 + 21 seconds.
-      list(
-        "value" = date_target - g_63_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1996_start_threshold) {
-      # Offset = 42.18 + 20 seconds.
-      list(
-        "value" = date_target - g_62_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1994_mid_threshold) {
-      # Offset = 42.18 + 19 seconds.
-      list(
-        "value" = date_target - g_61_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1993_mid_threshold) {
-      # Offset = 42.18 + 18 seconds.
-      list(
-        "value" = date_target - g_60_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1992_mid_threshold) {
-      # Offset = 42.18 + 17 seconds.
-      list(
-        "value" = date_target - g_59_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1991_start_threshold) {
-      # Offset = 42.18 + 16 seconds.
-      list(
-        "value" = date_target - g_58_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1990_start_threshold) {
-      # Offset = 42.18 + 15 seconds.
-      list(
-        "value" = date_target - g_57_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1988_start_threshold) {
-      # Offset = 42.18 + 14 seconds.
-      list(
-        "value" = date_target - g_56_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1985_mid_threshold) {
-      # Offset = 42.18 + 13 seconds.
-      list(
-        "value" = date_target - g_55_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1983_mid_threshold) {
-      # Offset = 42.18 + 12 seconds.
-      list(
-        "value" = date_target - g_54_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1982_mid_threshold) {
-      # Offset = 42.18 + 11 seconds.
-      list(
-        "value" = date_target - g_53_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1981_mid_threshold) {
-      # Offset = 42.18 + 10 seconds.
-      list(
-        "value" = date_target - g_52_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1980_start_threshold) {
-      # Offset = 42.18 + 9 seconds.
-      list(
-        "value" = date_target - g_51_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1979_start_threshold) {
-      # Offset = 42.18 + 8 seconds.
-      list(
-        "value" = date_target - g_50_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1978_start_threshold) {
-      # Offset = 42.18 + 7 seconds.
-      list(
-        "value" = date_target - g_49_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1977_start_threshold) {
-      # Offset = 42.18 + 6 seconds.
-      list(
-        "value" = date_target - g_48_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1976_start_threshold) {
-      # Offset = 42.18 + 5 seconds.
-      list(
-        "value" = date_target - g_47_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1975_start_threshold) {
-      # Offset = 42.18 + 4 seconds.
-      list(
-        "value" = date_target - g_46_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1974_start_threshold) {
-      # Offset = 42.18 + 3 seconds.
-      list(
-        "value" = date_target - g_45_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1973_start_threshold) {
-      # Offset = 42.18 + 2 seconds.
-      list(
-        "value" = date_target - g_44_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else if (date_target >= c_1972_mid_threshold) {
-      # Offset = 42.18 + 1 seconds.
-      list(
-        "value" = date_target - g_43_18_seconds, "uncertainty" = g_zero_seconds
-      )
-
-    } else {
-      list(
-        "value" = date_target - g_42_18_seconds, "uncertainty" = g_zero_seconds
-      )
+      return(get_utc(date_target))
     }
+
+    # In R, findInterval(test_val, vector_intervals), returns the index of the
+    #   interval in vector_interval, for which test_val is greater than.
+    #
+    # If test_val is < than every interval, it returns 0.
+    # If test_val is >= interval n, but < interval (n + 1), it returns n.
+    # If test_val is > every interval, it returns length(vector_intervals).
+    #
+    #  N.B. It assumes data in vector_intervals are sorted small to large.
+
+    date_idx <- findInterval(date_target, c_thresholds)
+    offset_match <- if (date_idx == 0) c_offsets[28] else c_offsets[date_idx]
+    list("value" = date_target - offset_match, "uncertainty" = c_zero_seconds)
   }
 }
 
 make_time_jde_to_dynam <- function() {
 
-  # Assumed global constants.
-  #   g_0_mpfr, g_0_25_mpfr, g_0_5_mpfr, g_1_mpfr, g_2_mpfr, g_30_6001_mpfr,
-  #   g_365_25_mpfr, g_4716_mpfr.
-
   # Closure constants.
-  c_13_mpfr <- mpfr("13", 128L)
-  c_14_mpfr <- mpfr("14", 128L)
-  c_122_1_mpfr <- mpfr("122.1", 128L)
-  c_1524_mpfr <- mpfr("1524", 128L)
-  c_4715_mpfr <- mpfr("4715", 128L)
-  c_36524_25_mpfr <- mpfr("36524.25", 128L)
+  c_0_mpfr          <- mpfr("0", 128L)
+  c_0_25_mpfr       <- mpfr("0.25", 128L)
+  c_0_5_mpfr        <- mpfr("0.5", 128L)
+  c_1_mpfr          <- mpfr("1", 128L)
+  c_2_mpfr          <- mpfr("2", 128L)
+  c_13_mpfr         <- mpfr("13", 128L)
+  c_14_mpfr         <- mpfr("14", 128L)
+  c_30_6001_mpfr    <- mpfr("30.6001", 128L)
+  c_122_1_mpfr      <- mpfr("122.1", 128L)
+  c_365_25_mpfr     <- mpfr("365.25", 128L)
+  c_1524_mpfr       <- mpfr("1524", 128L)
+  c_4715_mpfr       <- mpfr("4715", 128L)
+  c_4716_mpfr       <- mpfr("4716", 128L)
+  c_36524_25_mpfr   <- mpfr("36524.25", 128L)
   c_1867216_25_mpfr <- mpfr("1867216.25", 128L)
-  c_2299161_mpfr <- mpfr("2299161", 128L)
+  c_2299161_mpfr    <- mpfr("2299161", 128L)
 
   # Body of: time_jde_to_dynamical.
   function(jde_mpfr) {
@@ -1985,43 +1759,44 @@ make_time_jde_to_dynam <- function() {
     }
 
     # Input must be >= 0.
-    if (jde_mpfr < g_0_mpfr) {
+    if (jde_mpfr < c_0_mpfr) {
       cat("\nError in function time_jde_to_dynamical.\nInput dynamical time:\n")
       print(jde_mpfr, digits = 20)
       cat("\nNeed dynamical time >= 0.\n")
       stopifnot(FALSE)
     }
 
-    jde <- g_0_5_mpfr + jde_mpfr
-    z <- trunc(jde)   # Integer part.
-    f <- jde - z      # Fractional part.
+    jde <- c_0_5_mpfr + jde_mpfr
+    z <- trunc(jde)   # Integer part of the input JDE.
+    f <- jde - z      # Fractional part of the input JDE.
 
     if (z < c_2299161_mpfr) {
       a <- z
     } else {
       alpha <- floor((z - c_1867216_25_mpfr) / c_36524_25_mpfr)
-      a <- g_1_mpfr + alpha - floor(alpha * g_0_25_mpfr) + z
+      a <- c_1_mpfr + alpha - floor(alpha * c_0_25_mpfr) + z
     }
 
     b <- c_1524_mpfr + a
-    c <- floor((b - c_122_1_mpfr) / g_365_25_mpfr)
-    d <- floor(g_365_25_mpfr * c)
-    e <- floor((b - d) / g_30_6001_mpfr)
+    c <- floor((b - c_122_1_mpfr) / c_365_25_mpfr)
+    d <- floor(c_365_25_mpfr * c)
+    e <- floor((b - d) / c_30_6001_mpfr)
 
-    # Day, as a decimal.
-    day <- b - d - floor(g_30_6001_mpfr * e) + f
-    day_trunc <- trunc(day)
+    # Day value, with time, as a decimal.
+    day <- b - d - floor(c_30_6001_mpfr * e) + f
+    # Day value, without time.
+    day_without_time <- trunc(day)
 
     # Month, as an integer.
     if (e < c_14_mpfr) {
-      month <- e - g_1_mpfr
+      month <- e - c_1_mpfr
     } else {
       month <- e - c_13_mpfr
     }
 
     # Year, as an integer.
-    if (month > g_2_mpfr) {
-      year <- c - g_4716_mpfr
+    if (month > c_2_mpfr) {
+      year <- c - c_4716_mpfr
     } else {
       year <- c - c_4715_mpfr
     }
@@ -2029,120 +1804,80 @@ make_time_jde_to_dynam <- function() {
     # The Dynamical Time returned here is stored in UTC date-time format.
     # If the time zone label is neglected however, the date and time are the
     # correct Dynamical Time.
+    #
     # N.B. Any fractional part of the day gets added to the output.
-
+    #
+    # N.B. If no time zone is specified in a lubridate::make_datetime call, it
+    #      defaults to UTC.
+    #
     as.POSIXct(
-      paste0(
-        sprintf("%02d", as.integer(day_trunc)), "-",
-        sprintf("%02d", as.integer(month)), "-",
-        as.integer(year), " 00:00:00"
-      ),
+      lubridate::make_datetime(
+        year = as.integer(year),
+        month = as.integer(month),
+        day = as.integer(day_without_time)
+      ) + lubridate::ddays(day - day_without_time),
       format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-    ) + lubridate::ddays(day - day_trunc)
+    )
   }
 }
 
 make_time_universal_to_dynam <- function() {
 
-  # Assumed global constants.
-  #   g_zero_seconds,
-  #   g_69_18_seconds, g_68_18_seconds, g_67_18_seconds, g_66_18_seconds,
-  #   g_65_18_seconds, g_64_18_seconds, g_63_18_seconds, g_62_18_seconds,
-  #   g_61_18_seconds, g_60_18_seconds, g_59_18_seconds, g_58_18_seconds,
-  #   g_57_18_seconds, g_56_18_seconds, g_55_18_seconds, g_54_18_seconds,
-  #   g_53_18_seconds, g_52_18_seconds, g_51_18_seconds, g_50_18_seconds,
-  #   g_49_18_seconds, g_48_18_seconds, g_47_18_seconds, g_46_18_seconds,
-  #   g_45_18_seconds, g_44_18_seconds, g_43_18_seconds, g_42_18_seconds.
-
   # Closure constants.
-  #
+
   c_900_milliseconds <- lubridate::dmilliseconds(mpfr("900", 128L))
-  #
-  # Set time conversion constants.
-  c_2021_start <- as.POSIXct(
-    "01-01-2021 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
+
+  c_zero_seconds <- lubridate::dseconds(mpfr("0", 128L))
+
+  c_offsets <- c(
+    lubridate::dseconds(mpfr("43.18", 128L)),  #  1 (42.18 + 1 sec)
+    lubridate::dseconds(mpfr("44.18", 128L)),  #  2 (42.18 + 2 sec)
+    lubridate::dseconds(mpfr("45.18", 128L)),  #  3 (42.18 + 3 sec)
+    lubridate::dseconds(mpfr("46.18", 128L)),  #  4 (42.18 + 4 sec)
+    lubridate::dseconds(mpfr("47.18", 128L)),  #  5 (42.18 + 5 sec)
+    lubridate::dseconds(mpfr("48.18", 128L)),  #  6 (42.18 + 6 sec)
+    lubridate::dseconds(mpfr("49.18", 128L)),  #  7 (42.18 + 7 sec)
+    lubridate::dseconds(mpfr("50.18", 128L)),  #  8 (42.18 + 8 sec)
+    lubridate::dseconds(mpfr("51.18", 128L)),  #  9 (42.18 + 9 sec)
+    lubridate::dseconds(mpfr("52.18", 128L)),  # 10 (42.18 + 10 sec)
+    lubridate::dseconds(mpfr("53.18", 128L)),  # 11 (42.18 + 11 sec)
+    lubridate::dseconds(mpfr("54.18", 128L)),  # 12 (42.18 + 12 sec)
+    lubridate::dseconds(mpfr("55.18", 128L)),  # 13 (42.18 + 13 sec)
+    lubridate::dseconds(mpfr("56.18", 128L)),  # 14 (42.18 + 14 sec)
+    lubridate::dseconds(mpfr("57.18", 128L)),  # 15 (42.18 + 15 sec)
+    lubridate::dseconds(mpfr("58.18", 128L)),  # 16 (42.18 + 16 sec)
+    lubridate::dseconds(mpfr("59.18", 128L)),  # 17 (42.18 + 17 sec)
+    lubridate::dseconds(mpfr("60.18", 128L)),  # 18 (42.18 + 18 sec)
+    lubridate::dseconds(mpfr("61.18", 128L)),  # 19 (42.18 + 19 sec)
+    lubridate::dseconds(mpfr("62.18", 128L)),  # 20 (42.18 + 20 sec)
+    lubridate::dseconds(mpfr("63.18", 128L)),  # 21 (42.18 + 21 sec)
+    lubridate::dseconds(mpfr("64.18", 128L)),  # 22 (42.18 + 22 sec)
+    lubridate::dseconds(mpfr("65.18", 128L)),  # 23 (42.18 + 23 sec)
+    lubridate::dseconds(mpfr("66.18", 128L)),  # 24 (42.18 + 24 sec)
+    lubridate::dseconds(mpfr("67.18", 128L)),  # 25 (42.18 + 25 sec)
+    lubridate::dseconds(mpfr("68.18", 128L)),  # 26 (42.18 + 26 sec)
+    lubridate::dseconds(mpfr("69.18", 128L)),  # 27 (42.18 + 27 sec)
+    lubridate::dseconds(mpfr("42.18", 128L))   # 28 Put the default value last.
   )
-  c_2017_start <- as.POSIXct(
-    "01-01-2017 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2015_mid <- as.POSIXct(
-    "01-07-2015 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2012_mid <- as.POSIXct(
-    "01-07-2012 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2009_start <- as.POSIXct(
-    "01-01-2009 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_2006_start <- as.POSIXct(
-    "01-01-2006 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1999_start <- as.POSIXct(
-    "01-01-1999 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1997_mid <- as.POSIXct(
-    "01-07-1997 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1996_start <- as.POSIXct(
-    "01-01-1996 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1994_mid <- as.POSIXct(
-    "01-07-1994 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1993_mid <- as.POSIXct(
-    "01-07-1993 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1992_mid <- as.POSIXct(
-    "01-07-1992 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1991_start <- as.POSIXct(
-    "01-01-1991 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1990_start <- as.POSIXct(
-    "01-01-1990 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1988_start <- as.POSIXct(
-    "01-01-1988 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1985_mid <- as.POSIXct(
-    "01-07-1985 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1983_mid <- as.POSIXct(
-    "01-07-1983 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1982_mid <- as.POSIXct(
-    "01-07-1982 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1981_mid <- as.POSIXct(
-    "01-07-1981 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1980_start <- as.POSIXct(
-    "01-01-1980 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1979_start <- as.POSIXct(
-    "01-01-1979 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1978_start <- as.POSIXct(
-    "01-01-1978 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1977_start <- as.POSIXct(
-    "01-01-1977 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1976_start <- as.POSIXct(
-    "01-01-1976 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1975_start <- as.POSIXct(
-    "01-01-1975 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1974_start <- as.POSIXct(
-    "01-01-1974 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1973_start <- as.POSIXct(
-    "01-01-1973 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
-  c_1972_mid <- as.POSIXct(
-    "01-07-1972 00:00:00", format = "%d-%m-%Y %H:%M:%OS", tz = "UTC"
-  )
+
+  # Thresholds correspond to the (irregular) addition of leap seconds, as
+  # managed by the International Earth Rotation and Reference Systems Service.
+  c_thresholds_timeless <- as.POSIXct(c(
+    "01-07-1972 00:00:00", "01-01-1973 00:00:00",  #  1,  2
+    "01-01-1974 00:00:00", "01-01-1975 00:00:00",  #  3,  4
+    "01-01-1976 00:00:00", "01-01-1977 00:00:00",  #  5,  6
+    "01-01-1978 00:00:00", "01-01-1979 00:00:00",  #  7,  8
+    "01-01-1980 00:00:00", "01-07-1981 00:00:00",  #  9, 10
+    "01-07-1982 00:00:00", "01-07-1983 00:00:00",  # 11, 12
+    "01-07-1985 00:00:00", "01-01-1988 00:00:00",  # 13, 14
+    "01-01-1990 00:00:00", "01-01-1991 00:00:00",  # 15, 16
+    "01-07-1992 00:00:00", "01-07-1993 00:00:00",  # 17, 18
+    "01-07-1994 00:00:00", "01-01-1996 00:00:00",  # 19, 20
+    "01-07-1997 00:00:00", "01-01-1999 00:00:00",  # 21, 22
+    "01-01-2006 00:00:00", "01-01-2009 00:00:00",  # 23, 24
+    "01-07-2012 00:00:00", "01-07-2015 00:00:00",  # 25, 26
+    "01-01-2017 00:00:00", "01-01-2026 00:00:00"   # 27, 28
+  ), format = "%d-%m-%Y %H:%M:%OS",  tz = "UTC")
 
   # Body of: time_universal_to_dynamical.
   function(utc) {
@@ -2168,7 +1903,7 @@ make_time_universal_to_dynam <- function() {
     # N.B. Number of leap seconds added from 1972-2020 = 27.
     # N.B. Timings are available from Wikipedia, the Astronomical Almanac, etc.
 
-    if (utc >= c_2021_start) {
+    if (utc >= c_thresholds_timeless[28]) {
       # Get delta T via algorithmic estimation.
       # N.B. The algorithm finds delta T for a UT (or UT1).
       # N.B. Thus, allow for uncertainty in UTC versus UT1 (always <= 0.9 s; as
@@ -2176,133 +1911,39 @@ make_time_universal_to_dynam <- function() {
       del_t <- calculate_with_uncertainty(
         get_del_t, utc, c_900_milliseconds, TRUE
       )
-      list(
+      return(list(
         "value" = utc + lubridate::dseconds(del_t$value),
         "uncertainty" = lubridate::dseconds(del_t$uncertainty)
-      )
-
-    } else if (utc >= c_2017_start) {
-      # offset = 42.18 seconds + 27 leap seconds.
-      # No forecast change to the end of 2021; keep leap seconds unchanged.
-      list("value" = utc + g_69_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_2015_mid) {
-      # offset = 42.18 seconds + 26 leap seconds.
-      list("value" = utc + g_68_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_2012_mid) {
-      # offset = 42.18 seconds + 25 leap seconds.
-      list("value" = utc + g_67_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_2009_start) {
-      # offset = 42.18 seconds + 24 leap seconds.
-      list("value" = utc + g_66_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_2006_start) {
-      # offset = 42.18 seconds + 23 leap seconds.
-      list("value" = utc + g_65_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1999_start) {
-      # offset = 42.18 seconds + 22 leap seconds.
-      list("value" = utc + g_64_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1997_mid) {
-      # offset = 42.18 seconds + 21 leap seconds.
-      list("value" = utc + g_63_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1996_start) {
-      # offset = 42.18 seconds + 20 leap seconds.
-      list("value" = utc + g_62_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1994_mid) {
-      # offset = 42.18 seconds + 19 leap seconds.
-      list("value" = utc + g_61_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1993_mid) {
-      # offset = 42.18 seconds + 18 leap seconds.
-      list("value" = utc + g_60_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1992_mid) {
-      # offset = 42.18 seconds + 17 leap seconds.
-      list("value" = utc + g_59_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1991_start) {
-      # offset = 42.18 seconds + 16 leap seconds.
-      list("value" = utc + g_58_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1990_start) {
-      # offset = 42.18 seconds + 15 leap seconds.
-      list("value" = utc + g_57_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1988_start) {
-      # offset = 42.18 seconds + 14 leap seconds.
-      list("value" = utc + g_56_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1985_mid) {
-      # offset = 42.18 seconds + 13 leap seconds.
-      list("value" = utc + g_55_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1983_mid) {
-      # offset = 42.18 seconds + 12 leap seconds.
-      list("value" = utc + g_54_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1982_mid) {
-      # offset = 42.18 seconds + 11 leap seconds.
-      list("value" = utc + g_53_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1981_mid) {
-      # offset = 42.18 seconds + 10 leap seconds.
-      list("value" = utc + g_52_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1980_start) {
-      # offset = 42.18 seconds + 9 leap seconds.
-      list("value" = utc + g_51_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1979_start) {
-      # offset = 42.18 seconds + 8 leap seconds.
-      list("value" = utc + g_50_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1978_start) {
-      # offset = 42.18 seconds + 7 leap seconds.
-      list("value" = utc + g_49_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1977_start) {
-      # offset = 42.18 seconds + 6 leap seconds.
-      list("value" = utc + g_48_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1976_start) {
-      # offset = 42.18 seconds + 5 leap seconds.
-      list("value" = utc + g_47_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1975_start) {
-      # offset = 42.18 seconds + 4 leap seconds.
-      list("value" = utc + g_46_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1974_start) {
-      # offset = 42.18 seconds + 3 leap seconds.
-      list("value" = utc + g_45_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1973_start) {
-      # offset = 42.18 seconds + 2 leap seconds.
-      list("value" = utc + g_44_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else if (utc >= c_1972_mid) {
-      # offset = 42.18 seconds + 1 leap seconds.
-      list("value" = utc + g_43_18_seconds, "uncertainty" = g_zero_seconds)
-
-    } else {
-      # offset = 42.18 seconds + 0 leap seconds.
-      list("value" = utc + g_42_18_seconds, "uncertainty" = g_zero_seconds)
+      ))
     }
+
+    # In R, findInterval(test_val, vector_intervals), returns the index of the
+    #   interval in vector_interval, for which test_val is greater than.
+    #
+    # If test_val is < than every interval, it returns 0.
+    # If test_val is >= interval n, but < interval (n + 1), it returns n.
+    # If test_val is > every interval, it returns length(vector_intervals).
+    #
+    #  N.B. It assumes data in vector_intervals are sorted small to large.
+
+    date_idx <- findInterval(utc, c_thresholds_timeless)
+    offset_match <- if (date_idx == 0) c_offsets[28] else c_offsets[date_idx]
+    list("value" = utc - offset_match, "uncertainty" = c_zero_seconds)
   }
 }
+
+###############################################################################
+
+# Pre closures instantiation pause.
+# Add a two-second pause to ameliorate RStudio input/output and RAM spikes.
+Sys.sleep(2)
 
 # Implement closures.
 angle_degrees_to_radians <- make_angle_degrees_to_radians()
 angle_radians_to_degrees <- make_angle_radians_to_degrees()
 get_del_t <- make_get_del_t()
-get_del_t_post_2025 <- make_get_del_t_post_2025()
-get_del_t_pre_2025 <- make_get_del_t_pre_2025()
+get_del_t_post_2050 <- make_get_del_t_post_2050()
+get_del_t_pre_2050 <- make_get_del_t_pre_2050()
 get_eccentric_anomaly <- make_get_eccentric_anomaly()
 get_lunar_apsis_jde <- make_get_lunar_apsis_jde()
 get_lunar_distance <- make_get_lunar_distance()
@@ -2313,6 +1954,10 @@ time_dynamical_to_jde <- make_time_dynam_to_jde()
 time_dynamical_to_universal <- make_time_dynam_to_universal()
 time_jde_to_dynamical <- make_time_jde_to_dynam()
 time_universal_to_dynamical <- make_time_universal_to_dynam()
+
+# Post closures instantiation pause.
+# Add a two-second pause to ameliorate RStudio input/output and RAM spikes.
+Sys.sleep(2)
 ```
 
 ```{r, "testing-precision"}
@@ -2541,7 +2186,7 @@ cat(
   )
 )
 lunar_distance <- calculate_with_uncertainty(
-  get_lunar_distance, mpfr("2448724.5", 128L), g_0_mpfr, TRUE
+  get_lunar_distance, mpfr("2448724.5", 128L), mpfr("0", 128L), TRUE
 )
 label <- paste0("Estimated lunar distance:")
 cat(
@@ -2984,7 +2629,7 @@ list_new_moon <- lapply(
 
 # Series 3: Get enough other lunar distances to graph.
 # Try a point every 0.5 days.
-interval_days <- lubridate::ddays(g_0_5_mpfr)
+interval_days <- lubridate::ddays(mpfr("0.5", 128L))
 list_filler_dates <- 0:(ceiling((date_end - date_start) / interval_days) - 1)
 list_filler_dates <- date_start + list_filler_dates * interval_days
 list_filler_distances <- lapply(
