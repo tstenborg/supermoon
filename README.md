@@ -32,7 +32,7 @@ uncertainties.
 | :--------------------- | :--------------------------------------------------------------------------------------- |
 | `src/elp-downloader.R` | R script. Supporting files downloader.                                                   |
 | `src/supermoon.Rmd`    | R Markdown. Supermoon estimator.                                                         |
-| `SuperMoon.md`         | GitHub-browsable code with example results, including 2001&ndash;2100 supermoon listing. |
+| `out/supermoon.md`     | GitHub-browsable code with example results, including 2001&ndash;2100 supermoon listing. |
 
 ## Software Requirements
 
@@ -173,10 +173,27 @@ MSYS2 UCRT64 shell:
 
 The file `supermoon.Rmd` should be run from RStudio.
 
+#### Run
+
+The R Markdown file may be run interactively from the **Run** dropdown menu in
+the RStudio source pane.
+
+#### Knit
+
+The R Markdown file may be knit interactively from the **Knit** dropdown menu
+in the RStudio source pane. Faster, non-interactive knitting, can be
+triggered from the RStudio console:
+
+    rmarkdown::render("supermoon.Rmd")
+
+Pre-knit markdown with example results, including a 2001&ndash;2100 supermoon
+listing, is [available here](out/supermoon.md).
+
 ## Acknowledgements
 
-This repository used Gemini 3.6 Flash [[5](#references)] as an assistive tool to
-help resolve Fortran-R integration issues and provide performance tuning tips.
+This repository used Gemini 3.6 and 3.7 Flash
+[[5](#references), [6](#references)] as assistive tools to help resolve
+Fortran-R integration issues and provide performance tuning tips.
 
 ## References
 
@@ -205,4 +222,7 @@ help resolve Fortran-R integration issues and provide performance tuning tips.
    [Online]. Available: <https://ftp.imcce.fr/pub/ephem/moon/elp82b/>
 
 5. _Gemini 3.6 Flash_. (Large language model, July 2026 release). Google.
+   [Online]. Available: [google.com](https://www.google.com/).
+
+6. _Gemini 3.7 Flash_. (Large language model, August 2026 release). Google.
    [Online]. Available: [google.com](https://www.google.com/).
