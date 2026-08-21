@@ -186,7 +186,7 @@ triggered from the RStudio console:
 
     rmarkdown::render("supermoon.Rmd")
 
-Pre-knit markdown with example results, including a 2001&ndash;2100 supermoon
+Markdown with pre-knitted results, including a 2001&ndash;2100 supermoon
 listing, is [available here](out/supermoon.md).
 
 ## Acknowledgements
