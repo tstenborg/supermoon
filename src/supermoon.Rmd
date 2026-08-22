@@ -834,9 +834,7 @@ make_get_lunar_distance <- function() {
     #                   2443259.8999999999 by default.
     #                   This easily causes errors of +- 1 second.
 
-    if (!is.mpfr(jde_mpfr)) {
-      jde_mpfr <- mpfr(jde_mpfr, 128L)
-    }
+    if (!is.mpfr(jde_mpfr)) { jde_mpfr <- mpfr(jde_mpfr, 128L) }
 
     # Input must be >= 0.
     if (jde_mpfr < c_0_mpfr) {
@@ -1437,8 +1435,8 @@ make_get_utc <- function() {
     dt_decimal <- mpfr(lubridate::decimal_date(date_target), 128L)
     small_diff <- mpfr(lubridate::decimal_date(date_target - c_5_minutes), 128L)
 
-    # Determine how many seconds were in the UTC year, and get a inverse scaling
-    # factor.
+    # Determine how many seconds were in the UTC year, and get an inverse
+    # scaling factor.
     #
     # N.B. Remember, del T is a function of the UTC year (not DT year).
     #
@@ -1466,8 +1464,8 @@ make_get_utc <- function() {
 
     # Return the UTC value as a date-time.
     #
-    #   N.B. By default unirootR warns if the root finding calculation fails to
-    #        converge.
+    #   N.B. By default, unirootR warns if the root finding calculation fails
+    #        to converge.
     #
     #   N.B. unirootR may take either a vector "interval" argument, or "lower"
     #        and "upper" arguments. Avoid passing mpfr values to "interval"
@@ -1754,9 +1752,7 @@ make_time_jde_to_dynam <- function() {
     #                    2443259.8999999999 by default.
     #                    This easily causes errors of +- 1 second.
 
-    if (!is.mpfr(jde_mpfr)) {
-      jde_mpfr <- mpfr(jde_mpfr, 128L)
-    }
+    if (!is.mpfr(jde_mpfr)) { jde_mpfr <- mpfr(jde_mpfr, 128L) }
 
     # Input must be >= 0.
     if (jde_mpfr < c_0_mpfr) {
@@ -1964,243 +1960,189 @@ Sys.sleep(2)
 # Precision Testing
 # -----------------
 #
-# Quantify the effect of using R's default double (53-bit) precision versus
-# mpfr 128-bit precision. Here, converting a date-time in JDE (Julian Ephemeris
-# Day) to dynamical time is the test case.
+# Quantify the effect of using R's default numeric (53-bit) precision versus
+# mpfr 128-bit precision. Converting a date-time in Julian Ephemeris Day (JDE)
+# format to dynamical time is the test case.
 
 g_lunar_apsis <- "perigee"
 g_lunar_phase <- "full moon"
 
-jde_a <- 2443259.9
-jde_b <- mpfr("2443259.9", 128L)
+list_jde <- list(2443259.9, mpfr("2443259.9", 128L))
+dyn_time_a <- time_jde_to_dynamical(list_jde[[1]])
+dyn_time_b <- time_jde_to_dynamical(list_jde[[2]])
 
-result_a <- time_jde_to_dynamical(jde_a)
-result_b <- time_jde_to_dynamical(jde_b)
-
-cat("Precision Testing\n-----------------\n\n", sep = "")
-
-cat("JDE, target value...\n2443259.9\n\n", sep = "")
-cat("JDE, stored as a double variable (low precision)...\n", sep = "")
-print(jde_a, digits = 17)
-cat("\nJDE, stored as a MPFR variable (high precision)...\n", sep = "")
-print(jde_b, digits = 17)
+distance_a <- get_lunar_distance(list_jde[[1]])
+distance_b <- get_lunar_distance(list_jde[[2]])
+difference <- abs(distance_a$value - distance_b$value) * mpfr("1000000", 128L)
 
 cat(
-  paste0(
-    "\n\nConverting JDE to dynamical time, ",
-    "low precision (top) versus high precision (bottom)...\n"
-  ),
+  "Precision Testing\n-----------------\n\n",
+  "Julian Ephemeris Day (JDE), target value...\n  2443259.9\n\n",
+  "JDE, stored as a numeric variable (low precision)...\n  ",
+  format(list_jde[[1]], digits = 17),
+  "\n\nJDE, stored as a MPFR variable (high precision)...\n  ",
+  formatMpfr(list_jde[[2]], 17),
+  "\n\nConverting JDE to dynamical time...\n",
+  "   low precision: ", format(dyn_time_a, digits = 17),
+  " ", format(dyn_time_a, "%Z"), "\n",
+  "  high precision: ", format(dyn_time_b, digits = 17),
+  " ", format(dyn_time_b, "%Z"), "\n",
+  "\nCorresponding difference in lunar distance...\n  ",
+  "\U2248", formatMpfr(difference, 1), " mm\n",
   sep = ""
 )
-print(result_a, digits = 17)
-print(result_b, digits = 17)
 
-cat("\nWhat's the corresponding difference in lunar distance?\n")
-lunar_distance_a <- get_lunar_distance(jde_a)
-lunar_distance_b <- get_lunar_distance(jde_b)
-
-difference <- abs(lunar_distance_a$value - lunar_distance_b$value) *
-  mpfr("1000000", 128L)
-cat("\U2248", formatMpfr(difference, 1), " mm\n", sep = "")
+rm(list_jde, dyn_time_a, dyn_time_b, distance_a, distance_b, difference)
 ```
 
 ```{r, "testing-Meeus-examples"}
-# Testing
-# -------
+# Introduction.
+str_hrule <- "\n-------\n"
+cat(paste0(
+  "Testing", str_hrule, "\nTest the system's functions against examples in ",
+  "'Astronomical Algorithms'.\n",
+  "Ref: J. Meeus, Astronomical Algorithms, 2nd ed., Richmond, VA, USA: ",
+  "Willmann-Bell, 1998.\n"
+))
 
-cat("Testing\n-------\n\n", sep = "")
-cat(
+######
+# Set up.
+
+list_globals <- list(
+  names = c("g_lunar_phase", "g_lunar_phase", "g_lunar_apsis"),
+  values = c("new moon",     "last quarter",  "apogee")
+)
+
+vec_dates_utc <- c(1977.13, 2044.026, 1988.75)
+vec_functions <- c(rep("get_lunar_phase_jde", 2), "get_lunar_apsis_jde")
+
+vec_headers <- c(
+  paste0(str_hrule, "Testing: New Moon Feb 1977 (page 353).\n\n"),
+  paste0(str_hrule, "Testing: Last Quarter Moon Jan 2044 (page 353).\n\n"),
+  paste0(str_hrule, "Testing: Lunar Apogee Oct 1988 (page 357).\n\n"),
   paste0(
-    "Test the system's functions against examples in ",
-    "'Astronomical Algorithms'.\n"
+    str_hrule,
+    "Testing: Lunar Distance for 12 April 1992, at 00:00:00 Dynamical Time ",
+    "(pages 342-343).\n\n"
   )
 )
-cat(
+vec_footers_prefix <- c("Expected:", rep("\nExpected:", 2), "Expected:")
+vec_footers_body <- c(
   paste0(
-    "Ref: Meeus J., Astronomical Algorithms, 2nd Ed, Willmann-Bell, ",
-    "Richmond, VA, 1998.\n"
-  )
-)
-
-######
-cat("\n-------\nTesting: New Moon Feb 1977 (page 353)\n\n")
-g_lunar_phase <- "new moon"
-date_target_utc <- lubridate::date_decimal(1977.13)
-date_target_dynamical <- time_universal_to_dynamical(date_target_utc)
-phase_date <- calculate_with_uncertainty(
-  get_lunar_phase_jde, date_target_dynamical$value,
-  date_target_dynamical$uncertainty, TRUE
-)
-label <- paste0("Next ", g_lunar_phase, ":")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "),
-  formatMpfr(phase_date$value, 11),
-  " +- ", formatMpfr(phase_date$uncertainty, 1), " JDE\n",
-  sep = ""
-)
-phase_date_dynamical <- calculate_with_uncertainty(
-  time_jde_to_dynamical, phase_date$value, phase_date$uncertainty, FALSE
-)
-cat(
-  replicate(g_max_indent - 2, " "), "= ",
-  format(
-    lubridate::round_date(phase_date_dynamical$value, unit = "seconds"),
-    "%d-%b-%Y %H:%M:%S"
+    "18-Feb-1977 03:37 UT.\n", strrep(" ", g_max_indent),
+    "N.B. UT = UTC +- 0.9 s.\n"
   ),
-  " +- ",
-  format(
-    hms::as_hms(
-      signif(as.numeric(phase_date_dynamical$uncertainty, units = "secs"), 2)
-    ),
-    "%H:%M:%S"
-  ),
-  " Dynamical Time\n",
-  sep = ""
-)
-phase_date_utc <- calculate_with_uncertainty(
-  time_dynamical_to_universal, phase_date_dynamical$value,
-  phase_date_dynamical$uncertainty, TRUE
-)
-cat(
-  replicate(g_max_indent - 2, " "), "= ",
-  format(
-    lubridate::round_date(phase_date_utc$value, unit = "seconds"),
-    "%d-%b-%Y %H:%M:%S"
-  ),
-  " +- ",
-  format(
-    hms::as_hms(
-      signif(as.numeric(phase_date_utc$uncertainty, units = "secs"), 2)
-    ),
-    "%H:%M:%S"
-  ),
-  " UTC\n\n",
-  sep = ""
-)
-
-label <- paste("Expected:")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "), "18-Feb-1977 03:37 UT.\n",
-  sep = ""
-)
-cat(replicate(g_max_indent, " "), "N.B. UT = UTC +- 0.9 s.\n", sep = "")
-######
-
-
-######
-cat("\n-------\nTesting: Last Quarter Moon Jan 2044 (page 353)\n\n")
-g_lunar_phase <- "last quarter"
-date_target_utc <- lubridate::date_decimal(2044.026)
-date_target_dynamical <- time_universal_to_dynamical(date_target_utc)
-phase_date <- calculate_with_uncertainty(
-  get_lunar_phase_jde, date_target_dynamical$value,
-  date_target_dynamical$uncertainty, TRUE
-)
-label <- paste0("Next ", g_lunar_phase, ":")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "),
-  formatMpfr(phase_date$value, 11), " +- ",
-  formatMpfr(phase_date$uncertainty, 1), " JDE\n",
-  sep = ""
-)
-phase_date_dynamical <- calculate_with_uncertainty(
-  time_jde_to_dynamical, phase_date$value, phase_date$uncertainty, FALSE
-)
-cat(
-  replicate(g_max_indent - 2, " "), "= ",
-  format(
-    lubridate::round_date(phase_date_dynamical$value, unit = "seconds"),
-    "%d-%b-%Y %H:%M:%S"
-  ),
-  " +- ",
-  format(
-    hms::as_hms(
-      signif(as.numeric(phase_date_dynamical$uncertainty, units = "secs"), 2)
-    ),
-    "%H:%M:%S"
-  ),
-  " Dynamical Time\n\n",
-  sep = ""
-)
-
-label <- paste("Expected:")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "),
   "21-Jan-2044 23:48:17 Dynamical Time.\n",
-  sep = ""
-)
-######
-
-
-######
-cat("\n-------\nTesting: Lunar Apogee Oct 1988 (page 357)\n\n")
-g_lunar_apsis <- "apogee"
-date_target_utc <- lubridate::date_decimal(1988.75)
-date_target_dynamical <- time_universal_to_dynamical(date_target_utc)
-apsis_date <- calculate_with_uncertainty(
-  get_lunar_apsis_jde, date_target_dynamical$value,
-  date_target_dynamical$uncertainty, TRUE
-)
-label <- paste0("Next ", g_lunar_apsis, ":")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "),
-  formatMpfr(apsis_date$value, 10), " +- ",
-  formatMpfr(apsis_date$uncertainty, 1), " JDE\n",
-  sep = ""
-)
-apsis_date_dynamical <- calculate_with_uncertainty(
-  time_jde_to_dynamical, apsis_date$value, apsis_date$uncertainty, FALSE
-)
-cat(
-  replicate(g_max_indent - 2, " "), "= ",
-  format(
-    lubridate::round_date(apsis_date_dynamical$value, unit = "seconds"),
-    "%d-%b-%Y %H:%M:%S"
-  ),
-  " +- ",
-  format(
-    hms::as_hms(
-      signif(as.numeric(apsis_date_dynamical$uncertainty, units = "secs"), 3)
-    ),
-    "%H:%M:%S"
-  ),
-  " Dynamical Time\n\n",
-  sep = ""
-)
-
-label <- paste("Expected:")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "),
   "07-Oct-1988 20:29 Dynamical Time.\n",
-  sep = ""
+  "368409.7 km.\n"
 )
+
+vec_sig_figs_target <- c(11, 11, 10, 6)
+vec_sig_figs_dt_uncert <- c(2, 2, 3)
+vec_units           <- c(rep(" JDE\n", 3), " km\n\n")
+
 ######
 
+# Iterate over the four tests.
+for (i in 1:4) {
 
-######
-cat(
-  paste0(
-    "\n-------\nTesting: ",
-    "Lunar Distance for 12 April 1992, at 00:00:00 Dynamical Time ",
-    "(pages 342-343).\n"
+  cat(vec_headers[i]) # Display an explanatory header for the test.
+
+  # Calculate key lunar target data (a date or distance).
+  if (i <= 3) {
+    # Set test-relevant global variables.
+    assign(list_globals$names[i], list_globals$values[i])
+
+    date_target_utc <- lubridate::date_decimal(vec_dates_utc[i])
+    date_target_dynamical <- time_universal_to_dynamical(date_target_utc)
+    target <- calculate_with_uncertainty(
+      match.fun(vec_functions[i]), date_target_dynamical$value,
+      date_target_dynamical$uncertainty, TRUE
+    )
+    label <- paste0("Next ", list_globals$values[i], ":")
+
+  } else {
+    target <- calculate_with_uncertainty(
+      get_lunar_distance, mpfr("2448724.5", 128L), mpfr("0", 128L), TRUE
+    )
+    label <- paste0("Estimated lunar distance:")
+  }
+
+  # Display key lunar target data (a date or distance).
+  cat(
+    label, strrep(" ", g_max_indent - nchar(label)),
+    # Print the value and uncertainty, dropping any trailing periods.
+    sub("\\.$", "", formatMpfr(target$value, digits = vec_sig_figs_target[i])),
+    " +- ",
+    sub("\\.$", "", formatMpfr(target$uncertainty, digits = 1)), vec_units[i],
+    sep = ""
   )
-)
-lunar_distance <- calculate_with_uncertainty(
-  get_lunar_distance, mpfr("2448724.5", 128L), mpfr("0", 128L), TRUE
-)
-label <- paste0("Estimated lunar distance:")
-cat(
-  "\n", label, replicate(g_max_indent - nchar(label), " "),
-  signif(asNumeric(lunar_distance$value), 6), " +- ",
-  signif(asNumeric(lunar_distance$uncertainty), 1), " km\n\n",
-  sep = ""
-)
 
-label <- paste("Expected:")
-cat(
-  label, replicate(g_max_indent - nchar(label), " "), "368409.7 km.\n",
-  sep = ""
+  # Calculate and display the Dynamical Date equivalent of key target dates.
+  if (i <= 3) {
+    date_dynamical <- calculate_with_uncertainty(
+      time_jde_to_dynamical, target$value, target$uncertainty, FALSE)
+    cat(
+      strrep(" ", g_max_indent - 2), "= ",
+      format(
+        lubridate::round_date(date_dynamical$value, unit = "seconds"),
+        "%d-%b-%Y %H:%M:%S"
+      ),
+      " +- ",
+      format(
+        hms::as_hms(signif(
+          as.numeric(date_dynamical$uncertainty, units = "secs"),
+          vec_sig_figs_dt_uncert[i]
+        )),
+        "%H:%M:%S"
+      ),
+      " Dynamical Time\n",
+      sep = ""
+    )
+
+    # For test one, also calculate and display the Universal Time equivalent.
+    if (i == 1) {
+      phase_date_ut <- calculate_with_uncertainty(
+        time_dynamical_to_universal, date_dynamical$value,
+        date_dynamical$uncertainty, TRUE
+      )
+      cat(
+        strrep(" ", g_max_indent - 2), "= ",
+        format(
+          lubridate::round_date(phase_date_ut$value, unit = "seconds"),
+          "%d-%b-%Y %H:%M:%S"
+        ),
+        " +- ",
+        format(
+          hms::as_hms(signif(
+            as.numeric(phase_date_ut$uncertainty, units = "secs"), 2
+          )),
+          "%H:%M:%S"
+        ),
+        " UTC\n\n",
+        sep = ""
+      )
+    }
+  }
+
+  # Display the expected value.
+  cat(
+    vec_footers_prefix[i],
+    strrep(" ", g_max_indent - nchar(sub("\n", "", vec_footers_prefix[i]))),
+    vec_footers_body[i],
+    sep = ""
+  )
+
+}
+
+# Clean up.
+rm(
+  date_dynamical, date_target_dynamical, date_target_utc, i, label,
+  list_globals, phase_date_ut, str_hrule, target, vec_dates_utc,
+  vec_footers_body, vec_footers_prefix, vec_functions, vec_headers,
+  vec_sig_figs_dt_uncert, vec_sig_figs_target, vec_units
 )
+invisible(gc(verbose = FALSE))
 ######
 ```
 
@@ -2256,7 +2198,7 @@ for (i in seq_along(vec_dates_astropixels)) {
 
   # Display target date.
   cat(
-    "------\n", label_date, replicate(g_max_indent - chars_label_date, " "),
+    "------\n", label_date, strrep(" ", g_max_indent - chars_label_date),
     format(vec_dates_astropixels[i], "%d-%b-%Y %H:%M:%S %Z"), "\n",
     sep = ""
   )
@@ -2265,14 +2207,14 @@ for (i in seq_along(vec_dates_astropixels)) {
   cat("\n", label_distance, sep = "")
   cat(
     "\nEstimate, astropixels.com:",
-    replicate(g_max_indent - nchar("Estimate, astropixels.com:"), " "),
+    strrep(" ", g_max_indent - nchar("Estimate, astropixels.com:")),
     vec_distances_astropixels[i], " +- <unspecified> km",
     sep = ""
   )
 
   # Display lunar distance at target date.
   cat(
-    "\nEstimate, R:", replicate(g_max_indent - nchar("Estimate, R:"), " "),
+    "\nEstimate, R:", strrep(" ", g_max_indent - nchar("Estimate, R:")),
     signif(asNumeric(vec_calculated_distances[[i]]$value), 6), " +- ",
     signif(asNumeric(vec_calculated_distances[[i]]$uncertainty), 1), " km\n\n",
     sep = ""
@@ -2307,12 +2249,12 @@ vec_calculated_distances <- lapply(
 # Display fourmilab.com data.
 # N.B. The first test distance needs a different number of decimal places than
 #      the rest.
-cat(replicate(g_max_indent, "-"), sep = "")
+cat(strrep("-", g_max_indent), sep = "")
 cat("\n\nLunar distance benchmarking: www.fourmilab.ch\n\n")
 #
 # Display target date.
 cat(
-  "------\n", label_date, replicate(g_max_indent - chars_label_date, " "),
+  "------\n", label_date, strrep(" ", g_max_indent - chars_label_date),
   format(vec_dates_fourmilab[1], "%d-%b-%Y %H:%M:%S"), " +- 00:00:02 UTC\n",
   sep = ""
 )
@@ -2321,7 +2263,7 @@ cat(
 cat("\n", label_distance, sep = "")
 cat(
   "\nEstimate, fourmilab.com:",
-  replicate(g_max_indent - nchar("Estimate, fourmilab.com:"), " "),
+  strrep(" ", g_max_indent - nchar("Estimate, fourmilab.com:")),
   format(vec_distances_fourmilab[1], nsmall = 1), " +- ",
   signif(asNumeric(vec_calculated_distances[[1]]$uncertainty), 1),
   " km (assumed uncertainty, from ELP 2000-82)",
@@ -2330,7 +2272,7 @@ cat(
 
 # Display lunar distance at target date.
 cat(
-  "\nEstimate, R:", replicate(g_max_indent - nchar("Estimate, R:"), " "),
+  "\nEstimate, R:", strrep(" ", g_max_indent - nchar("Estimate, R:")),
   format(signif(asNumeric(vec_calculated_distances[[1]]$value), 7), nsmall = 1),
   " +- ", signif(asNumeric(vec_calculated_distances[[1]]$uncertainty), 1),
   " km\n\n",
@@ -2341,7 +2283,7 @@ for (i in 2:length(vec_dates_fourmilab)) {
 
   # Display target date.
   cat(
-    "------\n", label_date, replicate(g_max_indent - chars_label_date, " "),
+    "------\n", label_date, strrep(" ", g_max_indent - chars_label_date),
     format(vec_dates_fourmilab[i], "%d-%b-%Y %H:%M:%S"), " +- 00:00:02 UTC\n",
     sep = ""
   )
@@ -2350,7 +2292,7 @@ for (i in 2:length(vec_dates_fourmilab)) {
   cat("\n", label_distance, sep = "")
   cat(
     "\nEstimate, fourmilab.com:",
-    replicate(g_max_indent - nchar("Estimate, fourmilab.com:"), " "),
+    strrep(" ", g_max_indent - nchar("Estimate, fourmilab.com:")),
     vec_distances_fourmilab[i], " +- ",
     signif(asNumeric(vec_calculated_distances[[i]]$uncertainty), 1),
     " km (assumed uncertainty, from ELP 2000-82)",
@@ -2359,7 +2301,7 @@ for (i in 2:length(vec_dates_fourmilab)) {
 
   # Display lunar distance at target date.
   cat(
-    "\nEstimate, R:", replicate(g_max_indent - nchar("Estimate, R:"), " "),
+    "\nEstimate, R:", strrep(" ", g_max_indent - nchar("Estimate, R:")),
     signif(asNumeric(vec_calculated_distances[[i]]$value), 6), " +- ",
     signif(asNumeric(vec_calculated_distances[[i]]$uncertainty), 1), " km\n\n",
     sep = ""
@@ -2390,7 +2332,7 @@ date_target_utc <- as.POSIXct(
 )
 label <- "Target date:"
 cat(
-  label, replicate(g_max_indent - nchar(label), " "),
+  label, strrep(" ", g_max_indent - nchar(label)),
   format(date_target_utc, "%d-%b-%Y %H:%M:%S %Z"), "\n",
   sep = ""
 )
@@ -2406,7 +2348,7 @@ if (!is_valid_date(date_target_utc)) {
 # Get the dynamical date equivalent of the target date.
 date_target_dynamical <- time_universal_to_dynamical(date_target_utc)
 cat(
-  replicate(g_max_indent - 2, " "), "= ",
+  strrep(" ", g_max_indent - 2), "= ",
   format(
     lubridate::round_date(date_target_dynamical$value, unit = "seconds"),
     "%d-%b-%Y %H:%M:%S"
@@ -2423,7 +2365,7 @@ phase_date <- calculate_with_uncertainty(
 )
 label <- paste0("Next ", g_lunar_phase, ":")
 cat(
-  label, replicate(g_max_indent - nchar(label), " "),
+  label, strrep(" ", g_max_indent - nchar(label)),
   format(signif(asNumeric(phase_date$value), 11), nsmall = 4), " +- ",
   signif(asNumeric(phase_date$uncertainty), 1), " JDE\n",
   sep = ""
@@ -2436,7 +2378,7 @@ phase_date_dynamical <- calculate_with_uncertainty(
   time_jde_to_dynamical, phase_date$value, phase_date$uncertainty, FALSE
 )
 cat(
-  replicate(g_max_indent - 2, " "), "= ",
+  strrep(" ", g_max_indent - 2), "= ",
   format(
     lubridate::round_date(phase_date_dynamical$value, unit = "seconds"),
     "%d-%b-%Y %H:%M:%S"
@@ -2460,7 +2402,7 @@ phase_date_utc <- calculate_with_uncertainty(
   phase_date_dynamical$uncertainty, TRUE
 )
 cat(
-  replicate(g_max_indent - 2, " "), "= ",
+  strrep(" ", g_max_indent - 2), "= ",
   format(
     lubridate::round_date(phase_date_utc$value, unit = "seconds"),
     "%d-%b-%Y %H:%M:%S"
@@ -2484,7 +2426,7 @@ apsis_date <- calculate_with_uncertainty(
 )
 label <- paste0("Next ", g_lunar_apsis, ":")
 cat(
-  "\n", label, replicate(g_max_indent - nchar(label), " "),
+  "\n", label, strrep(" ", g_max_indent - nchar(label)),
   format(signif(asNumeric(apsis_date$value), 9), nsmall = 2), " +- ",
   signif(asNumeric(apsis_date$uncertainty), 1), " JDE\n",
   sep = ""
@@ -2497,7 +2439,7 @@ apsis_date_dynamical <- calculate_with_uncertainty(
   time_jde_to_dynamical, apsis_date$value, apsis_date$uncertainty, FALSE
 )
 cat(
-  replicate(g_max_indent - 2, " "), "= ",
+  strrep(" ", g_max_indent - 2), "= ",
   format(
     lubridate::round_date(apsis_date_dynamical$value, unit = "seconds"),
     "%d-%b-%Y %H:%M:%S"
@@ -2521,7 +2463,7 @@ apsis_date_utc <- calculate_with_uncertainty(
   apsis_date_dynamical$uncertainty, TRUE
 )
 cat(
-  replicate(g_max_indent - 2, " "), "= ",
+  strrep(" ", g_max_indent - 2), "= ",
   format(
     lubridate::round_date(apsis_date_utc$value, unit = "seconds"),
     "%d-%b-%Y %H:%M:%S"
@@ -2544,7 +2486,7 @@ lunar_distance <- calculate_with_uncertainty(
 )
 label <- paste0("Lunar distance at ", g_lunar_apsis, ":")
 cat(
-  "\n", label, replicate(g_max_indent - nchar(label), " "),
+  "\n", label, strrep(" ", g_max_indent - nchar(label)),
   signif(asNumeric(lunar_distance$value), 6), " +- ",
   signif(asNumeric(lunar_distance$uncertainty), 1), " km\n",
   sep = ""
@@ -3011,7 +2953,7 @@ for (x in seq_along(list_supermoons)) {
     significant_figures <- 3
   }
   cat(
-    label, replicate(g_max_indent - nchar(label), " "),
+    label, strrep(" ", g_max_indent - nchar(label)),
     format(
       lubridate::round_date(
         list_supermoons[[x]]$full.moon$value, unit = "seconds"
@@ -3036,7 +2978,7 @@ for (x in seq_along(list_supermoons)) {
 
   label <- paste0(" ", g_lunar_apsis, ":")
   cat(
-    label, replicate(g_max_indent - nchar(label), " "),
+    label, strrep(" ", g_max_indent - nchar(label)),
     format(
       lubridate::round_date(
         list_supermoons[[x]]$perigee$value, unit = "seconds"
@@ -3064,7 +3006,7 @@ for (x in seq_along(list_supermoons)) {
     significant_figures <- 6
   }
   cat(
-    label, replicate(g_max_indent - nchar(label), " "),
+    label, strrep(" ", g_max_indent - nchar(label)),
     signif(asNumeric(list_supermoons[[x]]$distance$value), significant_figures),
     " +- ",
     signif(asNumeric(list_supermoons[[x]]$distance$uncertainty), 1), " km\n\n",
