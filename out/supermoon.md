@@ -832,7 +832,9 @@ make_get_lunar_distance <- function() {
     #                   2443259.8999999999 by default.
     #                   This easily causes errors of +- 1 second.
 
-    if (!is.mpfr(jde_mpfr)) { jde_mpfr <- mpfr(jde_mpfr, 128L) }
+    if (!is.mpfr(jde_mpfr)) {
+      jde_mpfr <- mpfr(jde_mpfr, 128L)
+    }
 
     # Input must be >= 0.
     if (jde_mpfr < c_0_mpfr) {
@@ -1750,7 +1752,9 @@ make_time_jde_to_dynam <- function() {
     #                    2443259.8999999999 by default.
     #                    This easily causes errors of +- 1 second.
 
-    if (!is.mpfr(jde_mpfr)) { jde_mpfr <- mpfr(jde_mpfr, 128L) }
+    if (!is.mpfr(jde_mpfr)) {
+      jde_mpfr <- mpfr(jde_mpfr, 128L)
+    }
 
     # Input must be >= 0.
     if (jde_mpfr < c_0_mpfr) {
@@ -2098,7 +2102,8 @@ for (i in 1:4) {
   # Calculate and display the Dynamical Date equivalent of key target dates.
   if (i <= 3) {
     date_dynamical <- calculate_with_uncertainty(
-      time_jde_to_dynamical, target$value, target$uncertainty, FALSE)
+      time_jde_to_dynamical, target$value, target$uncertainty, FALSE
+    )
     cat(
       strrep(" ", g_max_indent - 2), "= ",
       format(
