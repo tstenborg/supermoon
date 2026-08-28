@@ -182,18 +182,16 @@ the RStudio source pane.
 
 The R Markdown file may be knit interactively from the **Knit** dropdown menu
 in the RStudio source pane. Faster, non-interactive knitting, can be
-triggered from the RStudio console. Here, any prepended blank line is removed,
+triggered from the RStudio console. Here, any prepended empty line is removed,
 for linter compatibility.
 
-```r
-rmarkdown::render("supermoon.Rmd")
-md_file <- "supermoon.md"
-lines <- readLines(md_file, warn = FALSE)
-if (length(lines) > 0 && lines[1] == "") {
-  writeLines(lines[-1], md_file)
-}
-rm(md_file, lines)
-```
+    rmarkdown::render("supermoon.Rmd")
+    md_file <- "supermoon.md"
+    lines <- readLines(md_file, warn = FALSE)
+    if (length(lines) > 0 && lines[1] == "") {
+      writeLines(lines[-1], md_file)
+    }
+    rm(md_file, lines)
 
 Markdown with pre-knitted results, including a 2001&ndash;2100 supermoon
 listing, is [available here](out/supermoon.md).
