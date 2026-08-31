@@ -8,7 +8,7 @@ authors:
     orcid: "https://orcid.org/0000-0002-2693-9628"
 url: "https://github.com/tstenborg/supermoon"
 abstract: >-
-  "This repository holds digital assets associated with the article '21st \
+  "This repository holds digital resources associated with the article '21st \
   Century Supermoon Estimation in R'. That article presents a supermoon \
   estimator, software that predicts the timing and distance of a perigee full \
   or new moon for 2001 to 2100. Estimates include formal uncertainties."

@@ -2,8 +2,8 @@
 
 [![super-linter](../../actions/workflows/super-linter.yml/badge.svg)](../../actions/workflows/super-linter.yml) ![ai-assisted code](https://img.shields.io/badge/ai--assisted-code-white)
 
-This repository holds digital assets associated with the article "21st Century
-Supermoon Estimation in R" [[1](#references)]. That article presents a
+This repository holds digital resources associated with the article "21st
+Century Supermoon Estimation in R" [[1](#references)]. That article presents a
 supermoon estimator, software that predicts the timing and distance of a
 perigee full or new moon for 2001&ndash;2100. Estimates include formal
 uncertainties.
