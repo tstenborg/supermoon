@@ -198,9 +198,9 @@ listing, is [available here](out/supermoon.md).
 
 ## Acknowledgements
 
-This repository used Gemini 3.6 and 3.7 Flash
-[[5](#references), [6](#references)] as assistive tools to help resolve
-Fortran-R integration issues and provide performance tuning tips.
+This repository used Google Gemini [[5](#references), [6](#references)] as an
+assistive tool to help resolve Fortran-R integration issues and provide
+performance tuning tips.
 
 ## References
 
@@ -228,8 +228,8 @@ Fortran-R integration issues and provide performance tuning tips.
    de Calcul des Éphémérides, Observatoire de Paris. Accessed: 09 Aug 2026.
    [Online]. Available: <https://ftp.imcce.fr/pub/ephem/moon/elp82b/>
 
-5. _Gemini 3.6 Flash_. (Large language model, July 2026 release). Google.
+5. _Google Gemini_. (Large language model, July 2026 release). Google.
    [Online]. Available: [google.com](https://www.google.com/).
 
-6. _Gemini 3.7 Flash_. (Large language model, August 2026 release). Google.
+6. _Google Gemini_. (Large language model, August 2026 release). Google.
    [Online]. Available: [google.com](https://www.google.com/).
